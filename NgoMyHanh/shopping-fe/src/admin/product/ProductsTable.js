@@ -2,18 +2,23 @@ import React, {useEffect} from "react";
 import { useDispatch,useSelector } from "react-redux";
 import axios from "axios";
 import {setProducts} from '../../redux/actions/productActions';
+import { setTypes } from "../../redux/actions/typeAction";
+import { ServiceTypes } from "../../redux/contants/service-types";
 import Pagination from "react-js-pagination";
 
 
 const ProductsTable = () => {
+    const url_api = ServiceTypes.URL_API;
     const products = useSelector((state) => state.allProducts.products);
+    const types = useSelector((state) => state.allTypes.types);
     const dispatch = useDispatch();
 
-    console.log("product = ",products);
-
-    const fetchProducts = async() => {
+    const fetchProducts =async(e) => {
+        // e.preventDefault();
+        // const payload = new FormData(e.target);
+        // console.log("payload", payload);
         const response = await axios
-        .post("http://localhost:8000/api/product/list",{
+        .post(`${url_api}/product/list`,{
             "type_id":null,
             "sub_type_id":null
         })
@@ -23,12 +28,25 @@ const ProductsTable = () => {
         dispatch(setProducts(response.data));
     }
   
+    const fetchTypes = async() => {
+        const response = await axios
+        .get(`${url_api}/type/list`)
+        .catch((err) => {
+            console.log("err ",err);
+        })
+        dispatch(setTypes(response.data));
+        console.log("data ",response.data);
+    }
     useEffect(() => {
         fetchProducts();
     },[]);
 
+    useEffect(() => {
+        fetchTypes();
+    },[]);
+
     var stt=0;
-    const renderList = products.map((product) => {
+    const renderListProduct = products.map((product) => {
         stt=stt+1;
         const {id,name,price,code,sub_type_name}=product;
         return (
@@ -44,6 +62,13 @@ const ProductsTable = () => {
                 </td>
             </tr>
           );
+    });
+
+    const renderListType = types.map((type) => {
+        const {id,name}=type;
+        return (
+            <option>{name}</option>
+        )
     });
     return(
         <div className="container">
@@ -65,7 +90,7 @@ const ProductsTable = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {renderList}
+                    {renderListProduct}
                     </tbody>
                 </table>
                 </div>
@@ -74,21 +99,21 @@ const ProductsTable = () => {
 
             </div>
             <div className="col-3">
-              <form>
+              <form onSubmit={(e) => fetchProducts(e)}>
                 <div className="mb-3">
                     <label htmlFor="exampleInputEmail1" className="form-label">Tên sản phẩm</label>
                     <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="exampleInputPassword1" className="form-label">Loại sản phẩm</label>
-                    <select id="select" class="form-select">
-                        <option>Disabled select</option>
-                        <option>Disabled select</option>
+                    <select id="select" className="form-select">
+                        <option>Loại sản phẩm</option>
+                        {renderListType}
                     </select>
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="exampleInputPassword1" className="form-label">Danh mục sản phẩm</label>
-                    <select id="select" class="form-select">
+                    <label htmlFor="exampleInputPass    word1" className="form-label">Danh mục sản phẩm</label>
+                    <select id="select" className="form-select">
                         <option>Disabled select</option>
                         <option>Disabled select</option>
                     </select>

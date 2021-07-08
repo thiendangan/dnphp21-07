@@ -8,11 +8,10 @@ const ProductDetail = () => {
     const product = useSelector(state => state.product);
     const { id } = useParams();
     const dispatch = useDispatch();
-
     const fetchProductDetail = async() => {
         const response = await axios
         .post(`http://localhost:8000/api/product/detail`,{
-            "id":{id},
+            "id": id,
         })
         .catch((err) => {
             console.log("err ",err);
