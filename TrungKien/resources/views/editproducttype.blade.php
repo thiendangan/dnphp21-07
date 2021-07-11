@@ -17,9 +17,12 @@
 					Sửa loại sản phẩm
 				</div>
 				<div class="panel-body">
-					<form class="form-group">
-						<label>Tên loại:</label>
-						<input type="text" name="name" class="form-control" placeholder="Tên loại sản phẩm ...">
+					<form class="form-group" action="{{ route('producttype.update',$product_type_name->product_type_id )}}" method="POST" >
+						@csrf
+						@method('PUT')
+						<label style="margin-bottom:0.5rem; display:block">Tên loại sản phẩm cũ: <small style="font-weight: normal;">{{ $product_type_name->product_type_name}}</small> </label>
+						<label>Nhập tên loại sản phẩm mới</label>
+						<input type="text" required name="ProductType" class="form-control" placeholder="Tên loại sản phẩm ...">
 						<input type="submit" value="Submit" class="btn btn-warning" style="margin-top: 1rem;">
 					</form>
 				</div>

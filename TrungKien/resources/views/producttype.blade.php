@@ -15,11 +15,17 @@
 					Thêm loại sản phẩm
 				</div>
 				<div class="panel-body">
-					<div class="form-group">
-						<label>Tên loại:</label>
-						<input type="text" name="name" class="form-control" placeholder="Tên loại sản phẩm...">
-						<input type="submit" value="Thêm" class="btn btn-warning" style="margin-top: 1rem;">
+					@if ($message = Session::get('success'))
+					<div class="alert alert-success" style="margin-top:1rem">
+						<strong>{{ $message }}</strong>
 					</div>
+					@endif
+					<form class="form-group" action=" {{ route('producttype.store') }}" method="POST">
+						@csrf
+						<label>Tên loại:</label>
+						<input type="text" required name="ProductType" class="form-control" placeholder="Tên loại sản phẩm...">
+						<input type="submit" value="Thêm" class="btn btn-warning" style="margin-top: 1rem;">
+					</form>
 				</div>
 			</div>
 		</div>
@@ -36,55 +42,25 @@
 								</tr>
 							</thead>
 							<tbody>
+								@foreach($product_types as $product_type)
 								<tr>
-									<td>iPhone</td>
+									<td>{{ $product_type->product_type_name}}</td>
 									<td>
-										<a href="<?= route('producttype.edit',1)?>" class="btn btn-warning"><span class="glyphicon glyphicon-edit"></span> Sửa</a>
-										<a href="#" onclick="return confirm('Bạn có chắc chắn muốn xóa?')" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Xóa</a>
+										<form action="{{ route('producttype.edit', $product_type->product_type_id)}}" style="display:inline;">
+											@csrf
+											<button type="submit" class="btn btn-primary">Sửa</button>
+										</form>
+										<form action="{{ route('producttype.destroy',$product_type->product_type_id)}}" method="POST" style="display:inline;">
+
+											@method('DELETE')
+											@csrf
+											<button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</button>
+
+										</form>
+
 									</td>
 								</tr>
-								<tr>
-									<td>Samsung</td>
-									<td>
-										<a href="<?= route('producttype.edit',1)?>" class="btn btn-warning"><span class="glyphicon glyphicon-edit"></span> Sửa</a>
-										<a href="#" onclick="return confirm('Bạn có chắc chắn muốn xóa?')" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Xóa</a>
-									</td>
-								</tr>
-								<tr>
-									<td>Nokia</td>
-									<td>
-										<a href="<?= route('producttype.edit',1)?>" class="btn btn-warning"><span class="glyphicon glyphicon-edit"></span> Sửa</a>
-										<a href="#" onclick="return confirm('Bạn có chắc chắn muốn xóa?')" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Xóa</a>
-									</td>
-								</tr>
-								<tr>
-									<td>HTC</td>
-									<td>
-										<a href="<?= route('producttype.edit',1)?>" class="btn btn-warning"><span class="glyphicon glyphicon-edit"></span> Sửa</a>
-										<a href="#" onclick="return confirm('Bạn có chắc chắn muốn xóa?')" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Xóa</a>
-									</td>
-								</tr>
-								<tr>
-									<td>LG</td>
-									<td>
-										<a href="<?= route('producttype.edit',1)?>" class="btn btn-warning"><span class="glyphicon glyphicon-edit"></span> Sửa</a>
-										<a href="#" onclick="return confirm('Bạn có chắc chắn muốn xóa?')" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Xóa</a>
-									</td>
-								</tr>
-								<tr>
-									<td>Sony</td>
-									<td>
-										<a href="<?= route('producttype.edit',1)?>" class="btn btn-warning"><span class="glyphicon glyphicon-edit"></span> Sửa</a>
-										<a href="#" onclick="return confirm('Bạn có chắc chắn muốn xóa?')" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Xóa</a>
-									</td>
-								</tr>
-								<tr>
-									<td>Motorola</td>
-									<td>
-										<a href="<?= route('producttype.edit',1)?>" class="btn btn-warning"><span class="glyphicon glyphicon-edit"></span> Sửa</a>
-										<a href="#" onclick="return confirm('Bạn có chắc chắn muốn xóa?')" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Xóa</a>
-									</td>
-								</tr>
+								@endforeach
 							</tbody>
 						</table>
 						<nav aria-label="Page navigation example">
