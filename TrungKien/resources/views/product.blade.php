@@ -8,7 +8,6 @@
 		</div>
 	</div>
 	<!--/.row-->
-
 	<div class="row">
 		<div class="col-xs-12 col-md-12 col-lg-12">
 
@@ -17,6 +16,11 @@
 				<div class="panel-body">
 					<div class="bootstrap-table">
 						<a href="<?= route('product.create') ?>" class="btn btn-primary">Thêm sản phẩm</a>
+						@if ($message = Session::get('success'))
+						<div class="alert edit alert-success" style="margin-top: 1rem;margin-bottom:-1rem">
+							<strong>{{ $message }}</strong>
+						</div>
+						@endif
 						<div class="table-responsive">
 							<table class="table table-bordered" style="margin-top:20px;">
 								<thead>
@@ -31,20 +35,24 @@
 									</tr>
 								</thead>
 								<tbody>
-									@foreach ( $products as $products)
+									@foreach( $products as $product)
 									<tr>
 										<td>{{ $i++}}</td>
-										<td>{{ $products->product_name}}</td>
-										<td>{{ $products->product_id}}</td>
-										<td>{{ $products->product_category_name}}</td>
+										<td>{{ $product->product_name}}</td>
+										<td>{{ $product->product_id}}</td>
+										<td>{{ $product->product_category_name}}</td>
 										<td>
-											<img width="90%" src="<?= asset('img/iphone7-plus-black-select-2016.jpg') ?>" class="thumbnail" style="border:none !important;margin: 0 auto">
+											<img width="150px" height="100px" src="<?= asset('ProductImage/' . $product->product_image) ?>" class="thumbnail" style="border:none !important;margin: 0 auto; object-fit:cover">
 										</td>
-										<td>{{ $products->product_price }} Đ</td>
+										<td>{{ $product->product_price }} Đ</td>
 										<td style="display:flex;flex-direction:column;border:none">
-											<a href="<?= route('product.edit', $products->product_id) ?>" class="btn btn-warning" style="margin-bottom:0.7rem !important"><i class="fa fa-pencil" aria-hidden="true"></i> Sửa</a>
-											<a href="<?= route('product.destroy',$products->product_id ) ?>" class="btn btn-danger" style="margin-bottom:0.7rem !important"><i class="fa fa-trash" aria-hidden="true"></i> Xóa</a>
-											<a href="<?= route('product.show', $products->product_id) ?>" class="btn btn-success" style="margin-bottom:0.7rem !important"><i class="fa fa-trash" aria-hidden="true"></i> Chi tiết</a>
+											<a href="<?= route('product.edit', $product->product_id) ?>" class="btn btn-warning" style="margin-bottom:0.7rem !important"><i class="fa fa-pencil" aria-hidden="true"></i> Sửa</a>
+											<form action="{{ route('product.destroy',$product->product_id)}}" method="POST">
+												@method('DELETE')
+												@csrf
+												<button type="submit" class="btn btn-danger form-control" style="margin-bottom:0.7rem !important" onclick="return confirm('Bạn có chắc chắn muốn xóa?')"><i class="fa fa-trash" aria-hidden="true"></i> Xóa</button>
+											</form>
+											<a href="<?= route('product.show', $product->product_id) ?>" class="btn btn-success" style="margin-bottom:0.7rem !important"><i class="fa fa-trash" aria-hidden="true"></i> Chi tiết</a>
 										</td>
 									</tr>
 									@endforeach
@@ -61,6 +69,15 @@
 									<li class="page-item"><a class="page-link" href="#">End</a></li>
 								</ul>
 							</nav>
+							
+                             <!-- test -->
+							@foreach($products  as $item)
+							{{ $item->product_name}}<br>
+							{{ $item->product_id }}<br>
+							{{ $item->product_category_name }}<br>
+							{{ $item->product_image}}<br>
+							@endforeach
+							{!! $products->links() !!}
 						</div>
 					</div>
 					<div class="clearfix"></div>

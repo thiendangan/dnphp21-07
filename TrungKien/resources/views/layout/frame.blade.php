@@ -84,12 +84,12 @@
             $(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
         }(window.jQuery);
 
-        $(window).on('resize', function() {
-            if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
-        })
-        $(window).on('resize', function() {
-            if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
-        })
+        // $(window).on('resize', function() {
+        //     if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+        // })
+        // $(window).on('resize', function() {
+        //     if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+        // })
 
         // ajax for select all category from one ProductType
         if (typeof($('#addProductType')) !== 'undefined') {

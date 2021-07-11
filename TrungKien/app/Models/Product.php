@@ -19,16 +19,15 @@ class Product extends Model
     }
     // get all product in Product table
     public function getproductData(){
-        $products = DB::table('product')->get();
-        return $products;
+        return Product::orderBy('updated_at', 'DESC')->get();
     }
     public function getproductinfor(){
-        $products = $this->all();
+        $products = Product::orderBy('updated_at', 'DESC')->get();
         $array = array();
         foreach($products as $product){
             $array[] = $product->get_category->product_category_name;
         }
-         return  $array;
+        return  $array;
     }
     
 
