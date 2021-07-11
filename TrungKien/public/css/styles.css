@@ -1,4 +1,4 @@
-/*
+php/*
 Lumino Admin Bootstrap Template
 Version 1.0
 */
@@ -608,7 +608,7 @@ a.bg-danger:hover {
 }
 
 h1.page-header {
-	margin-top: 30px;
+	margin-top: 70px;
 	border-bottom: 0;
 }
 
@@ -894,11 +894,30 @@ h1.page-header {
 #avatar {
 	cursor: pointer;
 }
+#EditProduct_form .update_image{
+   display: flex;
+   justify-content: space-around;
+   align-items: center;
+   flex-wrap: wrap;
+}
 
+#EditProduct_form .update_image .Edit_image{
+	margin-bottom: 1rem;
+	flex-basis: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+#EditProduct_form .update_image .Edit_image label{
+	cursor: pointer;
+}
 footer{
 	height: 10vh;
 	line-height: 10vh;
 	background-color: #2F4F4F;
 	color: #fff;
 	text-align: center;
+}
+footer.detail_product{
+	margin-top: 2.5rem;
 }
