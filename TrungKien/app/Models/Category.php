@@ -13,11 +13,14 @@ class Category extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     function get_producttype(){
-        return $this->belongsTo('App\Models\ProductType','product_type_id','product_category_id');
+        return $this->belongsTo('App\Models\ProductType','product_type_id','product_type_id');
         // lấy được loại sản phẩm thuộc một danh mục cụ thể
     }
     function get_all_product(){
         return $this->hasMany('App\Models\Product','product_category_id','product_category_id');
         // lấy tất cả sản phẩm thuộc một danh mục
+    }
+    function get_all_categories(){
+        return Category::all();
     }
 }

@@ -8,7 +8,6 @@
 		</div>
 	</div>
 	<!--/.row-->
-
 	<div class="row">
 		<div class="col-xs-12 col-md-12 col-lg-12">
 			<div class="panel panel-primary">
@@ -16,20 +15,37 @@
 					Thêm danh mục
 				</div>
 				<div class="panel-body">
-					<div class="form-group">
+					@if ($message = Session::get('success'))
+					<div class="alert alert-success">
+						<strong>{{ $message }}</strong>
+					</div>
+					@endif
+					<form class="form-group" method="POST" action="{{ route('category.store')}}">
+						@if ($errors->has('product_type'))
+						<div class="alert alert-danger">
+							{{ $errors->first('product_type') }}
+						</div>
+						@endif
 						<label>Loại sản phẩm</label>
-						<select class="form-control">
+						@csrf
+						<select class="form-control" name="product_type">
 							<option selected disabled value="">Loại sản phẩm</option>
-							<option value="1">One</option>
-							<option value="2">Two</option>
-							<option value="3">Three</option>
+							@foreach($list_product_type as $item)
+							<option value="{{$item->product_type_id}}">{{$item->product_type_name}}</option>
+							@endforeach
 						</select>
-					</div>
-					<div class="form-group">
-						<label>Tên danh mục:</label>
-						<input type="text" name="name" class="form-control" placeholder="Tên danh mục...">
-						<input type="submit" value="Thêm" class="btn btn-warning" style="margin-top: 1rem;">
-					</div>
+
+						@if ($errors->has('categoryName'))
+						<div class="alert alert-danger">
+							{{ $errors->first('categoryName') }}
+						</div>
+						@endif
+						<div class="form-group">
+							<label>Tên danh mục:</label>
+							<input type="text" name="categoryName" class="form-control" placeholder="Tên danh mục...">
+							<input type="submit" value="Thêm" class="btn btn-warning" style="margin-top: 1rem;">
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -46,48 +62,22 @@
 								</tr>
 							</thead>
 							<tbody>
+								@foreach($product_category as $item)
 								<tr>
-									<td>iPhone</td>
+									<td>{{$item->product_category_name}}</td>
 									<td>
-										<a href="<?= route('category.edit', 1) ?>" class="btn btn-warning" style="margin: 0.5rem 0 !important"><span class="glyphicon glyphicon-edit"></span> Sửa</a>
-										<a href="<?= route('category.destroy', 1) ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa?')" class="btn btn-danger" style="margin: 0.5rem 0 !important"><span class="glyphicon glyphicon-trash"></span> Xóa</a>
+										<form action="{{ route('category.edit', $item->product_category_id )}}" style="display:inline;">
+											@csrf
+											<button type="submit" class="btn btn-primary">Sửa</button>
+										</form>
+										<form action="{{ route('category.destroy',$item->product_category_id)}}" method="POST" style="display:inline;">
+											@method('DELETE')
+											@csrf
+											<button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</button>
+										</form>
 									</td>
 								</tr>
-								<tr>
-									<td>iPhone</td>
-									<td>
-										<a href="<?= route('category.edit', 1) ?>" class="btn btn-warning" style="margin: 0.5rem 0 !important"><span class="glyphicon glyphicon-edit"></span> Sửa</a>
-										<a href="<?= route('category.destroy', 1) ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa?')" class="btn btn-danger" style="margin: 0.5rem 0 !important"><span class="glyphicon glyphicon-trash"></span> Xóa</a>
-									</td>
-								</tr>
-								<tr>
-									<td>iPhone</td>
-									<td>
-										<a href="<?= route('category.edit', 1) ?>" class="btn btn-warning" style="margin: 0.5rem 0 !important"><span class="glyphicon glyphicon-edit"></span> Sửa</a>
-										<a href="<?= route('category.destroy', 1) ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa?')" class="btn btn-danger" style="margin: 0.5rem 0 !important"><span class="glyphicon glyphicon-trash"></span> Xóa</a>
-									</td>
-								</tr>
-								<tr>
-									<td>iPhone</td>
-									<td>
-										<a href="<?= route('category.edit', 1) ?>" class="btn btn-warning" style="margin: 0.5rem 0 !important"><span class="glyphicon glyphicon-edit"></span> Sửa</a>
-										<a href="<?= route('category.destroy', 1) ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa?')" class="btn btn-danger" style="margin: 0.5rem 0 !important"><span class="glyphicon glyphicon-trash"></span> Xóa</a>
-									</td>
-								</tr>
-								<tr>
-									<td>iPhone</td>
-									<td>
-										<a href="<?= route('category.edit', 1) ?>" class="btn btn-warning" style="margin: 0.5rem 0 !important"><span class="glyphicon glyphicon-edit"></span> Sửa</a>
-										<a href="<?= route('category.destroy', 1) ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa?')" class="btn btn-danger" style="margin: 0.5rem 0 !important"><span class="glyphicon glyphicon-trash"></span> Xóa</a>
-									</td>
-								</tr>
-								<tr>
-									<td>iPhone</td>
-									<td>
-										<a href="<?= route('category.edit', 1) ?>" class="btn btn-warning" style="margin: 0.5rem 0 !important"><span class="glyphicon glyphicon-edit"></span> Sửa</a>
-										<a href="<?= route('category.destroy', 1) ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa?')" class="btn btn-danger" style="margin: 0.5rem 0 !important"><span class="glyphicon glyphicon-trash"></span> Xóa</a>
-									</td>
-								</tr>
+								@endforeach
 							</tbody>
 						</table>
 						<nav aria-label="Page navigation example">
