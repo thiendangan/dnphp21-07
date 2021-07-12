@@ -24,6 +24,8 @@ use App\Http\Controllers\ImageController;
 */
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
+    // dd("ok");
+    // dd($request);
     return $request->user();
 });
 Route::prefix('/product')->group(function () {
