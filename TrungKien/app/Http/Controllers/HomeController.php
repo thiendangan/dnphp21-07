@@ -13,10 +13,11 @@ class HomeController extends Controller
 {
     public $title= 'home';
     public function index(){
+        // use count DB
         $global_infor = [];
-        $global_infor[]= count(Product::all());
-        $global_infor[] = count(Category::all());
-        $global_infor[] = count(ProductType::all());
+        $global_infor[]= Product::count();
+        $global_infor[] = Category::count();
+        $global_infor[] = ProductType::count();
         return view('index')->with('title',$this->title)->with('global_infor',$global_infor);
     }
 }
