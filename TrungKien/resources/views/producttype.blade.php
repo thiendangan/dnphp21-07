@@ -37,6 +37,7 @@
 						<table class="table table-bordered">
 							<thead>
 								<tr class="bg-primary">
+									<th>STT</th>
 									<th>Tên loại</th>
 									<th style="width:30%">Tùy chọn</th>
 								</tr>
@@ -44,6 +45,7 @@
 							<tbody>
 								@foreach($product_types as $product_type)
 								<tr>
+									<td>{{$index++}}</td>
 									<td>{{ $product_type->product_type_name}}</td>
 									<td>
 										<form action="{{ route('producttype.edit', $product_type->product_type_id)}}" style="display:inline;">
@@ -57,25 +59,58 @@
 											<button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</button>
 
 										</form>
-
 									</td>
 								</tr>
 								@endforeach
 							</tbody>
 						</table>
-						<nav aria-label="Page navigation example">
-							<ul class="pagination  manage_product">
-								<li class="page-item"><a class="page-link " href="#">Start</a></li>
-								<li class="page-item"><a class="page-link" href="#">Previous</a></li>
-								<li class="page-item"><a class="page-link active" href="#">1</a></li>
-								<li class="page-item"><a class="page-link" href="#">2</a></li>
-								<li class="page-item"><a class="page-link" href="#">3</a></li>
-								<li class="page-item"><a class="page-link" href="#">Next</a></li>
-								<li class="page-item"><a class="page-link" href="#">End</a></li>
-							</ul>
-						</nav>
 					</div>
-					<div class="clearfix"></div>
+					<nav aria-label="Page navigation example">
+						@if ($product_types->hasPages())
+						<ul class="pagination pagination" style="display:block">
+							<li><a href="{{$product_types->toArray()['first_page_url']}}" rel="prev">Start</a></li>
+							{{-- Previous Page Link --}}
+
+							@if ($product_types->onFirstPage())
+							<li class="disabled"><span>Prev</span></li>
+							@else
+							<li><a href="{{ $product_types->previousPageUrl() }}" rel="prev">Prev</a></li>
+							@endif
+
+							@if($product_types->currentPage() > 3)
+							<li class="hidden-xs"><a href="{{ $product_types->url(1) }}">1</a></li>
+							@endif
+							@if($product_types->currentPage() > 4)
+							<li><span>...</span></li>
+							@endif
+							@foreach(range(1, $product_types->lastPage()) as $i)
+							@if($i >= $product_types->currentPage() - 2 && $i <= $product_types->currentPage() + 2)
+								@if ($i == $product_types->currentPage())
+								<li class="active"><span>{{ $i }}</span></li>
+								@else
+								<li><a href="{{ $product_types->url($i) }}">{{ $i }}</a></li>
+								@endif
+								@endif
+								@endforeach
+								@if($product_types->currentPage() < $product_types->lastPage() - 3)
+									<li><span>...</span></li>
+									@endif
+									@if($product_types->currentPage() < $product_types->lastPage() - 2)
+										<li class="hidden-xs"><a href="{{ $product_types->url($product_types->lastPage()) }}">{{ $product_types->lastPage() }}</a></li>
+										@endif
+
+										{{-- Next Page Link --}}
+										@if ($product_types->hasMorePages())
+										<li><a href="{{ $product_types->nextPageUrl() }}" rel="next">Next</a></li>
+										@else
+										<li class="disabled"><span>Next</span></li>
+										@endif
+
+										{{-- End Page Link --}}
+										<li><a href="{{ $product_types->toArray()['last_page_url'] }}" rel="prev">End</a></li>
+						</ul>
+						@endif
+					</nav>
 				</div>
 			</div>
 		</div>

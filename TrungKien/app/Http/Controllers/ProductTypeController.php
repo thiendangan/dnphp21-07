@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ProductType;
 use Illuminate\Support\Str;
+use App\Http\Requests\StoreAndUpateProductTypRequest;
 
 class ProductTypeController extends Controller
 {
@@ -16,9 +17,10 @@ class ProductTypeController extends Controller
      */
     public function index()
     {
-        $product_type = new ProductType();
-        $product_types =  $product_type->get_all_product_type();
-        return view('producttype', ['product_types' => $product_types, 'title' => $this->title]);
+        $product_types = ProductType::orderBy('created_at', 'DESC')->paginate(5);
+        $currentPage = $product_types->toArray()['current_page'];
+        $perPage = $product_types->toArray()['per_page'];
+        return view('producttype', ['product_types' => $product_types, 'index' => $perPage * ($currentPage - 1) + 1,'title' => $this->title]);
     }
 
     /**
@@ -37,19 +39,12 @@ class ProductTypeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreAndUpateProductTypRequest $request)
     {
-        $request->validate([
-            'ProductType' => 'required|unique:product_type,product_type_name|max:100',
-        ], [
-
-            'ProductType.required' => "Vui lòng nhập loại sản phẩm",
-            'ProductType.unique' => "Tên loại sản phẩm đã tồn tại. Vui lòng nhập tên khác",
-            'ProductType.max'  => "Vui lòng nhập tên loại sản phẩm dài dưới 100 ký tự"
-        ]);
+        $request->validated();
         $product_type = new ProductType();
         $product_type->	product_type_id = Str::random(5);
-        $product_type->product_type_name = $request->ProductType;
+        $product_type->product_type_name = ucfirst($request->ProductType);
         $product_type->save();
         return back()->with('success', 'Thêm mới loại sản phẩm thành công !');
     }
@@ -84,17 +79,11 @@ class ProductTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreAndUpateProductTypRequest $request, $id)
     {
-        $request->validate([
-            'ProductType' => 'required|unique:product_type,product_type_name|max:100',
-        ], [
-            'ProductType.required' => "Vui lòng nhập loại sản phẩm",
-            'ProductType.unique' => "Tên loại sản phẩm đã tồn tại. Vui lòng nhập tên khác",
-            'ProductType.max'  => "Vui lòng nhập tên loại sản phẩm dài dưới 100 ký tự"
-        ]);
+        $request->validated();
         $product_type =  ProductType::where('product_type_id',$id)->first();
-        $product_type->product_type_name = $request->ProductType;
+        $product_type->product_type_name = ucfirst( $request->ProductType );
         $product_type->save();
         return redirect('/admin/producttype ')->with('success', 'Đã chĩnh sửa loại sản phẩm thành công !');
     }
@@ -107,7 +96,6 @@ class ProductTypeController extends Controller
      */
     public function destroy($id)
     {
-
         ProductType::where('product_type_id',$id)->delete();
         return back()->with('success', 'Đã xóa loại sản phẩm thành công !');
     }
