@@ -26,7 +26,7 @@ class ProductFactory extends Factory
             'product_id' => Str::random(5),
             'product_name' => $this->faker->sentence(3),
             'product_price' =>$this->faker->numberBetween(1000, 100000),
-            'product_image' =>$this->faker->imageUrl($width = 900, $height = 1200, 'cats'),
+            'product_image' => '1626158936LIuU.jpg',
             'product_description' =>$this->faker->sentence(5),
             'product_category_id' => Category::inRandomOrder()->first()->product_category_id,
             'created_at' => now(),
