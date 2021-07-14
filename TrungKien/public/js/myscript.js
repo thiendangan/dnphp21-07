@@ -56,7 +56,6 @@ $(document).ready(function ()
     {
         $(this).change(function (link)
         {
-            console.log(this.files);
             $(".update_image img")[i].src = window.URL.createObjectURL(this.files[0]);
         })
     })

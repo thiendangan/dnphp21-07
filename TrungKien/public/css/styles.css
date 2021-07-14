@@ -921,3 +921,12 @@ footer{
 footer.detail_product{
 	margin-top: 2.5rem;
 }
+@media screen and (max-width: 767px){
+	.table-responsive>.table-bordered>tbody>tr:last-child>td, .table-responsive>.table-bordered>tbody>tr:last-child>th, .table-responsive>.table-bordered>tfoot>tr:last-child>td, .table-responsive>.table-bordered>tfoot>tr:last-child>th{
+        border-bottom: 1px solid #ccc;
+	}
+	.pagination{
+		margin-left: 1rem;
+		padding-bottom: 3rem;
+	}
+}
