@@ -80,7 +80,7 @@
 
 								@if ($errors->has('ProductImage.0'))
 								<div class="alert alert-danger">
-									{{ $errors->first('ProductImage') }}
+									{{ $errors->first('ProductImage.0') }}
 								</div>
 								@elseif($errors->has('ProductImage'))
 								<div class="alert alert-danger">

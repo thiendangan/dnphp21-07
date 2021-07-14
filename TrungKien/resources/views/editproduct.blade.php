@@ -20,7 +20,7 @@
 						<strong>{{ $message }}</strong>
 					</div>
 					@endif
-					<form method="POST" id="EditProduct_form" enctype="multipart/form-data" action="{{route('product.update',$product_infor->product_id)}}">
+					<form method="POST" id="EditProduct_form" enctype="multipart/form-data" action="{{route('product.update',$productInfor->product_id)}}">
 						@method('PUT')
 						@csrf
 						<div class="row" style="margin-bottom:40px">
@@ -32,7 +32,7 @@
 								@endif
 								<div class="form-group">
 									<label style="display: block;">Tên sản phẩm</label>
-									<input type="text" value="{{$product_infor->product_name}}" required name="ProductName" class="form-control" placeholder="Nhập tên sản phẩm">
+									<input type="text" value="{{$productInfor->product_name}}" required name="ProductName" class="form-control" placeholder="Nhập tên sản phẩm">
 								</div>
 								@if ($errors->has('Productprice'))
 								<div class="alert edit alert-danger">
@@ -41,7 +41,7 @@
 								@endif
 								<div class="form-group">
 									<label style="display: block;">Giá sản phẩm</label>
-									<input required type="number" value="{{$product_infor->product_price}}" name="Productprice" class="form-control" placeholder="Nhập giá sản phẩm">
+									<input required type="number" value="{{$productInfor->product_price}}" name="Productprice" class="form-control" placeholder="Nhập giá sản phẩm">
 								</div>
 
 								@if ($errors->has('ProductType'))
@@ -54,7 +54,7 @@
 									<select class="form-control" name="ProductType" id="EditProductType" required>
 										<option disabled selected>Chọn loại sản phẩm</option>
 										@foreach($ProductTypes as $item)
-										<option value="{{ $item->product_type_name}}" <?php if ($item->product_type_name === $product_infor->ProductTypeName) echo 'selected' ?>>{{$item->product_type_name}}</option>
+										<option value="{{ $item->product_type_name}}" <?php if ($item->product_type_name === $productInfor->product_type_name) echo 'selected' ?>>{{$item->product_type_name}}</option>
 										@endforeach
 									</select>
 								</div>
@@ -67,7 +67,7 @@
 								<div class="form-group">
 									<label style="display: block;">Danh mục sản phẩm</label>
 									<select required class="form-control" name="ProductCategory" id="EditCategory">
-										<option value="{{$product_infor->product_category_id}}" selected>{{ $product_infor->CategoryName }}</option>
+										<option value="{{$productInfor->product_category_id}}" selected>{{ $productInfor->product_category_name }}</option>
 									</select>
 								</div>
 
@@ -78,7 +78,7 @@
 								@endif
 								<div class="form-group">
 									<label style="display: block;">Miêu tả</label>
-									<textarea required name="Description" class="form-control" placeholder="Miêu tả sản phẩm">{{ $product_infor->product_description}}</textarea>
+									<textarea required name="Description" class="form-control" placeholder="Miêu tả sản phẩm">{{ $productInfor->product_description}}</textarea>
 								</div>
 							</div>
 							<div class="col-md-12 col-lg-6">
@@ -94,19 +94,19 @@
 								@endif
 								<div class="row update_image" style="padding-top: 2rem;">
 									<div class="Edit_image ">
-										<label for="edit_image1"><img src="<?php if(!empty($product_infor->product_image[0])){echo asset('ProductImage/'.$product_infor->product_image[0]);}else{ echo asset('ProductImage/plus1.jpg');}?> " alt="" width="130px" height="130px" style="border:1px solid #333;object-fit:cover"></label>
-										<input id="edit_image1" type="file" name="ProductImage[]" class="form-control" accept="image/png, image/jpeg,image/jpg" style="display:none;object-fit:cover" value="{{$product_infor->product_image[0]}}">
+										<label for="edit_image1"><img src="<?php if(!empty($productInfor->product_image[0])){echo asset('ProductImage/'.$productInfor->product_image[0]);}else{ echo asset('ProductImage/plus1.jpg');}?> " alt="" width="130px" height="130px" style="border:1px solid #333;object-fit:cover"></label>
+										<input id="edit_image1" type="file" name="ProductImage[]" class="form-control" accept="image/png, image/jpeg,image/jpg" style="display:none;object-fit:cover" >
 									</div>
 									<div class="Edit_image ">
-									<label for="edit_image2"><img src="<?php if(!empty($product_infor->product_image[1])){echo asset('ProductImage/'.$product_infor->product_image[1]);}else{ echo asset('ProductImage/plus1.jpg');}?> " alt="" width="130px" height="130px" style="border:1px solid #333;object-fit:cover"></label>
+									<label for="edit_image2"><img src="<?php if(!empty($productInfor->product_image[1])){echo asset('ProductImage/'.$productInfor->product_image[1]);}else{ echo asset('ProductImage/plus1.jpg');}?> " alt="" width="130px" height="130px" style="border:1px solid #333;object-fit:cover"></label>
 										<input id="edit_image2" type="file" name="ProductImage[]" class="form-control" accept="image/png, image/jpeg,image/jpg" style="display:none;object-fit:cover">
 									</div>
 									<div class="Edit_image ">
-										<label for="edit_image3"><img src="<?php if(!empty($product_infor->product_image[2])){echo asset('ProductImage/'.$product_infor->product_image[2]);}else{ echo asset('ProductImage/plus1.jpg');}?> " alt="" width="130px" height="130px" style="border:1px solid #333;object-fit:cover"></label>
+										<label for="edit_image3"><img src="<?php if(!empty($productInfor->product_image[2])){echo asset('ProductImage/'.$productInfor->product_image[2]);}else{ echo asset('ProductImage/plus1.jpg');}?> " alt="" width="130px" height="130px" style="border:1px solid #333;object-fit:cover"></label>
 										<input id="edit_image3" type="file" name="ProductImage[]" class="form-control" accept="image/png, image/jpeg,image/jpg" style="display:none;object-fit:cover">
 									</div>
 									<div class="Edit_image ">
-									<label for="edit_image4"><img src="<?php if(!empty($product_infor->product_image[3])){echo asset('ProductImage/'.$product_infor->product_image[3]);}else{ echo asset('ProductImage/plus1.jpg');}?> " alt="" width="130px" height="130px" style="border:1px solid #333;object-fit:cover"></label>
+									<label for="edit_image4"><img src="<?php if(!empty($productInfor->product_image[3])){echo asset('ProductImage/'.$productInfor->product_image[3]);}else{ echo asset('ProductImage/plus1.jpg');}?> " alt="" width="130px" height="130px" style="border:1px solid #333;object-fit:cover"></label>
 										<input id="edit_image4" type="file" name="ProductImage[]" class="form-control" accept="image/png, image/jpeg,image/jpg" style="display:none;object-fit:cover">
 									</div>
 								</div>

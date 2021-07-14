@@ -93,10 +93,11 @@
 
         // ajax for select all category from one ProductType
         if (typeof($('#addProductType')) !== 'undefined') {
-            $('#addProductType').on('change', function() {
+            $('#addProductType').on('change', function(){
+                console.log( $('#addProductType').val());
                 $.ajax({
                     type: 'POST',
-                    url: "<?= route('ajax') ?>",
+                    url: "<?= route('ProductTypeAjax')?>",
                     data: {
                         category: $('#addProductType').val(),
                         _token: "{{ csrf_token() }}"

@@ -37,14 +37,14 @@
 								<tbody>
 									@foreach( $products as $product)
 									<tr>
-										<td>{{ $i++}}</td>
+										<td>{{ $index++}}</td>
 										<td>{{ $product->product_name}}</td>
 										<td>{{ $product->product_id}}</td>
 										<td>{{ $product->product_category_name}}</td>
 										<td>
-											<img width="150px" height="100px" src="<?= asset('ProductImage/' . $product->product_image) ?>" class="thumbnail" style="border:none !important;margin: 0 auto; object-fit:cover">
+											<img width="150px" height="100px" src="<?= asset('ProductImage/' . $product->product_image[0]) ?>" class="thumbnail" style="border:none !important;margin: 0 auto; object-fit:cover">
 										</td>
-										<td>{{ $product->product_price }} Đ</td>
+										<td>{{ number_format($product->product_price) }} Đ</td>
 										<td style="display:flex;flex-direction:column;border:none">
 											<a href="<?= route('product.edit', $product->product_id) ?>" class="btn btn-warning" style="margin-bottom:0.7rem !important"><i class="fa fa-pencil" aria-hidden="true"></i> Sửa</a>
 											<form action="{{ route('product.destroy',$product->product_id)}}" method="POST">
@@ -58,27 +58,53 @@
 									@endforeach
 								</tbody>
 							</table>
-							<nav aria-label="Page navigation example">
-								<ul class="pagination  manage_product">
-									<li class="page-item"><a class="page-link " href="#">Start</a></li>
-									<li class="page-item"><a class="page-link" href="#">Previous</a></li>
-									<li class="page-item"><a class="page-link active" href="#">1</a></li>
-									<li class="page-item"><a class="page-link" href="#">2</a></li>
-									<li class="page-item"><a class="page-link" href="#">3</a></li>
-									<li class="page-item"><a class="page-link" href="#">Next</a></li>
-									<li class="page-item"><a class="page-link" href="#">End</a></li>
-								</ul>
-							</nav>
-							
-                             <!-- test -->
-							@foreach($products  as $item)
-							{{ $item->product_name}}<br>
-							{{ $item->product_id }}<br>
-							{{ $item->product_category_name }}<br>
-							{{ $item->product_image}}<br>
-							@endforeach
-							{!! $products->links() !!}
 						</div>
+						<nav aria-label="Page navigation example">
+								@if ($products->hasPages())
+								<ul class="pagination pagination" style="display:block">
+									<li><a href="{{$products->toArray()['first_page_url']}}" rel="prev">Start</a></li>
+									{{-- Previous Page Link --}}
+
+									@if ($products->onFirstPage())
+									<li class="disabled"><span>Prev</span></li>
+									@else
+									<li><a href="{{ $products->previousPageUrl() }}" rel="prev">Prev</a></li>
+									@endif
+
+									@if($products->currentPage() > 3)
+									<li class="hidden-xs"><a href="{{ $products->url(1) }}">1</a></li>
+									@endif
+									@if($products->currentPage() > 4)
+									<li><span>...</span></li>
+									@endif
+									@foreach(range(1, $products->lastPage()) as $i)
+									@if($i >= $products->currentPage() - 2 && $i <= $products->currentPage() + 2)
+										@if ($i == $products->currentPage())
+										<li class="active"><span>{{ $i }}</span></li>
+										@else
+										<li><a href="{{ $products->url($i) }}">{{ $i }}</a></li>
+										@endif
+										@endif
+										@endforeach
+										@if($products->currentPage() < $products->lastPage() - 3)
+											<li><span>...</span></li>
+											@endif
+											@if($products->currentPage() < $products->lastPage() - 2)
+												<li class="hidden-xs"><a href="{{ $products->url($products->lastPage()) }}">{{ $products->lastPage() }}</a></li>
+												@endif
+
+												{{-- Next Page Link --}}
+												@if ($products->hasMorePages())
+												<li><a href="{{ $products->nextPageUrl() }}" rel="next">Next</a></li>
+												@else
+												<li class="disabled"><span>Next</span></li>
+												@endif
+												
+												{{-- End Page Link --}}
+												<li><a href="{{ $products->toArray()['last_page_url'] }}" rel="prev">End</a></li>
+								</ul>
+								@endif
+						</nav>
 					</div>
 					<div class="clearfix"></div>
 				</div>
