@@ -13,13 +13,15 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::post('admin/product/getProductType', 'App\Http\Controllers\ProductController@productType')->name('getProductTypeAjax');
 Route::get('admin','App\Http\Controllers\HomeController@index')->name('home');
 Route::resource('admin/product','App\Http\Controllers\ProductController');
 Route::resource('admin/category', 'App\Http\Controllers\CategoryController');
 Route::resource('admin/producttype', 'App\Http\Controllers\ProductTypeController');
 
-Route::post('admin/ajax', "App\Http\Controllers\Ajax@index")->name('ajax');
+Route::get('/','App\Http\Controllers\ListProductController@index');
+
+
 
 // this is for test
 
