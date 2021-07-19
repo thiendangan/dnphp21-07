@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\ProductType;
-use Illuminate\Support\Str;
 use App\Http\Requests\StoreAndUpateProductTypRequest;
+use App\Services\ProductTypeService;
 
 class ProductTypeController extends Controller
 {
@@ -15,12 +13,17 @@ class ProductTypeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    protected $productType;
+
+    public function __construct(ProductTypeService $productType)
+    {
+        $this->productType = $productType;
+    }
     public function index()
     {
-        $product_types = ProductType::orderBy('created_at', 'DESC')->paginate(5);
-        $currentPage = $product_types->toArray()['current_page'];
-        $perPage = $product_types->toArray()['per_page'];
-        return view('producttype', ['product_types' => $product_types, 'index' => $perPage * ($currentPage - 1) + 1,'title' => $this->title]);
+        $product_types = $this->productType->ProductTypesService();
+        $index = $this->productType->getIndexPageService();
+        return view('producttype', ['product_types' => $product_types, 'index' => $index,'title' => $this->title]);
     }
 
     /**
@@ -42,11 +45,8 @@ class ProductTypeController extends Controller
     public function store(StoreAndUpateProductTypRequest $request)
     {
         $request->validated();
-        $product_type = new ProductType();
-        $product_type->	product_type_id = Str::random(5);
-        $product_type->product_type_name = ucfirst($request->ProductType);
-        $product_type->save();
-        return back()->with('success', 'Thêm mới loại sản phẩm thành công !');
+        $message = $this->productType->saveProductTypeService($request->ProductType);
+        return back()->with('success', $message);
     }
 
     /**
@@ -68,7 +68,7 @@ class ProductTypeController extends Controller
      */
     public function edit($id)
     {
-        $product_type_name = ProductType::where('product_type_id',$id)->first();
+        $product_type_name = $this->productType->getProductTypeService($id);
         return view('editproducttype', ['product_type_name' => $product_type_name, 'title' => $this->title]);
     }
 
@@ -82,10 +82,8 @@ class ProductTypeController extends Controller
     public function update(StoreAndUpateProductTypRequest $request, $id)
     {
         $request->validated();
-        $product_type =  ProductType::where('product_type_id',$id)->first();
-        $product_type->product_type_name = ucfirst( $request->ProductType );
-        $product_type->save();
-        return redirect('/admin/producttype ')->with('success', 'Đã chĩnh sửa loại sản phẩm thành công !');
+        $message = $this->productType->updateProductTypeService($id,$request->ProductType);
+        return redirect('/admin/producttype ')->with('success', $message);
     }
 
     /**
@@ -96,7 +94,7 @@ class ProductTypeController extends Controller
      */
     public function destroy($id)
     {
-        ProductType::where('product_type_id',$id)->delete();
-        return back()->with('success', 'Đã xóa loại sản phẩm thành công !');
+        $message = $this->productType->destroyProductTypeService($id);
+        return back()->with('success',$message);
     }
 }
