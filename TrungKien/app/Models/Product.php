@@ -12,8 +12,8 @@ class Product extends Model
     protected $primaryKey = 'product_id';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $appends = ['product_category_name', 'product_type_name'];
-
+    protected $appends = ['product_category_name', 'product_type_name','product_type_id'];
+    protected $fillable = ['title'];
     // choose specific colum 
     //  get the  category from specific product
 
@@ -35,8 +35,10 @@ class Product extends Model
     {
         return $this->category->ProductType->product_type_name;
     }
-
-
+    public function getProductTypeIdAttribute($value)
+    {
+        return $this->category->ProductType->product_type_id;
+    }
     
     // public static function getProductInfor(){
     //     $products = Product::orderBy('updated_at', 'DESC')->get();
