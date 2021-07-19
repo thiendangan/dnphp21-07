@@ -10,11 +10,11 @@
 	<!--/.row-->
 	<div class="row">
 		<div class="col-xs-12 col-md-12 col-lg-6">
-			<div class="panel panel-primary" style="padding-bottom:1rem; overflow:auto; height:403px;">
+			<div class="panel panel-primary" style="padding-bottom:1rem; overflow:auto; min-height:450px; box-shadow:none">
 				<div class="panel-heading">
 					Chi tiết sản phẩm
 				</div>
-				<div  style="margin-top :2rem;margin-left: 2rem;">
+				<div  style="margin-top :2rem;margin-left: 2rem">
 					<h3 style="display: block;font-weight: bold;margin-top :2rem;margin-bottom:2rem"> {{ $productInfor->product_name}} </h3>
 					<label style="display: block;" class="form-label"> Mã sản phẩm: <span style="font-weight: normal; margin:0.5rem 0" >{{ $productInfor->product_id }}</span></label>
 					<label style="display: block;"> Loại sản phẩm: <span style="font-weight: normal; margin:0.5rem 0">{{ $productInfor->product_type_name }}</span></label>
@@ -64,7 +64,7 @@
 		</div>
 	</div>
 	<!--/.row-->
-	<footer class="detail_product">
+	<footer class="detail_product" style="margin-top:45px">
 		NCC Company &copy; 2021
 	</footer>
 </div>
