@@ -21,6 +21,7 @@ Route::resource('admin/producttype', 'App\Http\Controllers\ProductTypeController
 
 Route::get('/','App\Http\Controllers\ListProductController@index');
 
+Route::post('/searchResult', 'App\Http\Controllers\ListProductController@searchProducts')->name('searchProducts');
 
 
 // this is for test

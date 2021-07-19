@@ -385,7 +385,7 @@ form.search .submitbtn {
     right: 0;
 }
 
-form.search .form-control {}
+/* form.search .form-control {} */
 
 form.search button:hover {
     background-color: darkcyan;
@@ -408,9 +408,27 @@ form.search button:hover {
     color: darkcyan;
     transition: all 0.5s ease-out;
 }
-
+#listProduct{
+   min-height: 79vh;
+}
+#listProduct p{
+    width: 100%;
+    font-size: 1.5rem;
+    color: #333;
+    font-family: sans-serif;
+    text-align: center;
+}
 input[type="search"]::-webkit-search-decoration, input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-results-button, input[type="search"]::-webkit-search-results-decoration {
     display: none;
+}
+.pagination li .page-link{
+    color: #333;
+}
+.pagination li .page-link:hover{
+    color: darkcyan;
+}
+.pagination li.active .page-link{
+    background-color: darkcyan;
 }
 
 footer {
