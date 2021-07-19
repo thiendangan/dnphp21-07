@@ -40,7 +40,7 @@
 							{{ $errors->first('categoryName') }}
 						</div>
 						@endif
-						<div class="form-group">
+						<div class="form-group" style="margin-top:1rem">
 							<label>Tên danh mục:</label>
 							<input type="text" name="categoryName" class="form-control" placeholder="Tên danh mục...">
 							<input type="submit" value="Thêm" class="btn btn-warning" style="margin-top: 1rem;">

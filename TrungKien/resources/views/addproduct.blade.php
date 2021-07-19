@@ -51,7 +51,7 @@
 									<select class="form-control" name="ProductType" id="addProductType" required>
 										<option disabled selected>Chọn loại sản phẩm</option>
 										@foreach($ProductTypes as $item)
-										<option value="{{ $item->product_type_name}} ">{{$item->product_type_name}}</option>
+										<option value="{{ $item->product_type_id }} ">{{ $item->product_type_name}}</option>
 										@endforeach
 									</select>
 								</div>
