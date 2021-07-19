@@ -2,28 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
-use Illuminate\Http\Request;
-use App\Models\ProductType;
-use Illuminate\Support\Str;
 use App\Http\Requests\StoreAndUpdateCategoryRequest;
-
+use App\Services\CategoryService;
 
 class CategoryController extends Controller
 {
     public $title = 'category';
+    protected $category;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct(CategoryService $category)
+    {
+      $this->category = $category;
+    }
     public function index()
     {
-        $productCategories =  Category::orderBy('created_at', 'DESC')->paginate(5);
-        $productTypes  = ProductType::orderBy('updated_at', 'DESC')->get();
-        $currentPage = $productCategories->toArray()['current_page'];
-        $perPage = $productCategories->toArray()['per_page'];
-        return view('category', ['productCategories' => $productCategories, 'productTypes' => $productTypes,'index' => $perPage * ($currentPage - 1) + 1, 'title' => $this->title]);
+        $productCategories = $this->category->CategoriesService();
+        $productTypes  =   $this->category->ProductTypesService();
+        $index =  $this->category->getIndexPageService();
+        return view('category', ['productCategories' => $productCategories, 'productTypes' => $productTypes,'index' => $index, 'title' => $this->title]);
     }
     /**
      * Show the form for creating a new resource.
@@ -44,12 +45,8 @@ class CategoryController extends Controller
     public function store(StoreAndUpdateCategoryRequest $request)
     {
         $request->validated();
-        $category = new Category;
-        $category->product_category_id = Str::random(5);
-        $category->product_category_name  = ucfirst($request->categoryName) ;
-        $category->product_type_id = $request->productType;
-        $category->save();
-        return back()->with('success', 'Thêm mới danh mục sản phẩm thành công !');
+        $message = $this->category->SaveCategoryService($request->categoryName,$request->productType);
+        return back()->with('success', $message);
     }
     /**
      * Display the specified resource.
@@ -70,8 +67,8 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $categroyInfor = Category::where('product_category_id', $id)->first();
-        $productTypes = ProductType::all();
+        $categroyInfor = $this->category->getCategoryService($id);
+        $productTypes = $this->category->ProductTypesService();
         return view('editcategory', ['categroyInfor' => $categroyInfor, 'productTypes' => $productTypes, 'title' => $this->title]);
     }
     /**
@@ -84,11 +81,8 @@ class CategoryController extends Controller
     public function update(StoreAndUpdateCategoryRequest $request, $id)
     {
         $request->validated();
-        $category = Category::where('product_category_id', $id)->first();
-        $category->product_category_name  = ucfirst($request->categoryName) ;
-        $category->product_type_id  = $request->productType;
-        $category->save();
-        return redirect('/admin/category')->with('success', 'Đã chĩnh sửa danh mục sản phẩm thành công !');
+        $message = $this->category->updateCategoryService($id,$request->categoryName,$request->productType);
+        return redirect('/admin/category')->with('success', $message);
     }
 
     /**
@@ -99,7 +93,7 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        Category::where('product_category_id',$id)->delete();
-        return back()->with('success', 'Đã xóa loại sản phẩm thành công !');
+        $message = $this->category->destroyCategoryService($id);
+        return back()->with('success', $message );
     }
 }
