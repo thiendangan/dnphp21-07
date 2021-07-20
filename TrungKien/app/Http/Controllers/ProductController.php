@@ -80,13 +80,15 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreAndUpdateProductRequest $request, $id)
+    public function update(StoreAndUpdateProductRequest $request,$id )
     {
         $request->validated();
         $message =  $this->product->updateProductService($id,$request,$request->ProductCategory,$request->ProductName, $request->Productprice,$request->Description);
-        return redirect()->route('product.edit',$id)->with('success', 'Thao tác thành công');
+        
+        return redirect()->route('product.index')->with('success', $message);
     }
-    /**-
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
@@ -97,7 +99,6 @@ class ProductController extends Controller
         $message =  $this->product->destroyProductService($id);
         return back()->with('success',$message );
     }
-
 
     // function to settle when ajax call to get all Categories
 

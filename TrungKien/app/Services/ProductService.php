@@ -44,8 +44,13 @@ class ProductService
     public function updateProductService($id, $request, $categoryId, $productName, $productPrice, $productDescription)
     {
         $images =  $this->resizeImageService($request, 'ProductImage');
-        $message = $this->product->updateRepository($id,$images, $categoryId, $productName, $productPrice, $productDescription);
-        return  $message ;
+        foreach ($request->backEndImages as $item) {
+            if ($item != 'haschanged') {
+                $images = $images . $item . ",";
+            }
+        }
+        $message = $this->product->updateRepository($id, $images, $categoryId, $productName, $productPrice, $productDescription);
+        return  $message;
     }
     public function destroyProductService($id)
     {
