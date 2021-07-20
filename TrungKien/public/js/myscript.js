@@ -52,12 +52,15 @@ $(document).ready(function ()
             element.html("");
         });
     });
-    $.each($(".update_image input"), function (i, value)
+    $.each($(".update_image .images"), function (i, value)
     {
         $(this).change(function (link)
         {
             $(".update_image img")[i].src = window.URL.createObjectURL(this.files[0]);
+            if($('.update_image .temp')[i])
+            $('.update_image .temp')[i].setAttribute('value',"haschanged");
         })
     })
+
 });
 

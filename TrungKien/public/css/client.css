@@ -265,7 +265,7 @@ body {
     html {
         font-size: 13px;
     }
-    .header h3 {
+    .header a {
         text-align: center;
         margin-bottom: 1rem;
     }
@@ -397,14 +397,17 @@ form.search button:hover {
     margin-bottom: 1rem;
 }
 
-.header h3 {
+.header a {
+
     font-weight: 700;
     font-family: 'Kaushan Script', cursive;
     font-size: 2rem;
     cursor: pointer;
+    color: #333;
+    text-decoration: none;
 }
 
-.header h3:hover {
+.header a:hover {
     color: darkcyan;
     transition: all 0.5s ease-out;
 }
@@ -433,6 +436,7 @@ input[type="search"]::-webkit-search-decoration, input[type="search"]::-webkit-s
 
 footer {
     height: 10vh;
+    border-radius: 10px 10px 0 0;
     line-height: 10vh;
     background-color: #2F4F4F;
     color: #fff;
