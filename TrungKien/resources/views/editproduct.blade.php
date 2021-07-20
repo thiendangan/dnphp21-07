@@ -92,22 +92,22 @@
 								</div>
 								@endif
 								<div class="row update_image" style="padding-top: 2rem;">
+									@foreach($productInfor->product_image as $item)
+									@if(!empty($item))
+									<input type="text" class="temp" name="backEndImages[]" hidden value="{{$item}}">
+									@endif
+									@endforeach
+									
+									@for($i=1;$i<=4;$i++)
 									<div class="Edit_image ">
-										<label for="edit_image1"><img src="<?php if(!empty($productInfor->product_image[0])){echo asset('ProductImage/'.$productInfor->product_image[0]);}else{ echo asset('ProductImage/plus1.jpg');}?> " alt="" width="130px" height="130px" style="border:1px solid #333;object-fit:cover"></label>
-										<input id="edit_image1" type="file" name="ProductImage[]" class="form-control" accept="image/png, image/jpeg,image/jpg" style="display:none;object-fit:cover" >
+										<label for="edit_image{{$i}}"><img src="<?php if (!empty($productInfor->product_image[$i-1])) {
+																				echo asset('ProductImage/' . $productInfor->product_image[$i-1]);
+																			} else {
+																				echo asset('ProductImage/plus1.jpg');
+																			} ?> " alt="" width="130px" height="130px" style="border:1px solid #333;object-fit:cover"></label>
+										<input id="edit_image{{$i}}" type="file" name="ProductImage[]" class="form-control images" accept="image/png, image/jpeg,image/jpg" style="display:none;object-fit:cover">
 									</div>
-									<div class="Edit_image ">
-									<label for="edit_image2"><img src="<?php if(!empty($productInfor->product_image[1])){echo asset('ProductImage/'.$productInfor->product_image[1]);}else{ echo asset('ProductImage/plus1.jpg');}?> " alt="" width="130px" height="130px" style="border:1px solid #333;object-fit:cover"></label>
-										<input id="edit_image2" type="file" name="ProductImage[]" class="form-control" accept="image/png, image/jpeg,image/jpg" style="display:none;object-fit:cover">
-									</div>
-									<div class="Edit_image ">
-										<label for="edit_image3"><img src="<?php if(!empty($productInfor->product_image[2])){echo asset('ProductImage/'.$productInfor->product_image[2]);}else{ echo asset('ProductImage/plus1.jpg');}?> " alt="" width="130px" height="130px" style="border:1px solid #333;object-fit:cover"></label>
-										<input id="edit_image3" type="file" name="ProductImage[]" class="form-control" accept="image/png, image/jpeg,image/jpg" style="display:none;object-fit:cover">
-									</div>
-									<div class="Edit_image ">
-									<label for="edit_image4"><img src="<?php if(!empty($productInfor->product_image[3])){echo asset('ProductImage/'.$productInfor->product_image[3]);}else{ echo asset('ProductImage/plus1.jpg');}?> " alt="" width="130px" height="130px" style="border:1px solid #333;object-fit:cover"></label>
-										<input id="edit_image4" type="file" name="ProductImage[]" class="form-control" accept="image/png, image/jpeg,image/jpg" style="display:none;object-fit:cover">
-									</div>
+									@endfor
 								</div>
 							</div>
 							<div class="col-md-12 col-lg-12">
