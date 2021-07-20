@@ -20,6 +20,7 @@ Route::resource('admin/category', 'App\Http\Controllers\CategoryController');
 Route::resource('admin/producttype', 'App\Http\Controllers\ProductTypeController');
 
 Route::get('/','App\Http\Controllers\ListProductController@index');
+Route::get('/detailProduct/{id}','App\Http\Controllers\ListProductController@detailProduct')->name('detailProduct');
 
 Route::post('/searchResult', 'App\Http\Controllers\ListProductController@searchProducts')->name('searchProducts');
 
