@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TypeController;
+use App\Http\Controllers\SubTypeController;
 use App\Http\Controllers\ImageController;
 
 
@@ -24,6 +25,8 @@ use App\Http\Controllers\ImageController;
 */
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
+    // dd("ok");
+    // dd($request);
     return $request->user();
 });
 Route::prefix('/product')->group(function () {
@@ -38,6 +41,9 @@ Route::prefix('/product')->group(function () {
 Route::prefix('/type')->group(function () {
     Route::post('/detail', [TypeController::class, 'find']);
     Route::get('/list', [TypeController::class, 'list']);
+});
+Route::prefix('/sub-type')->group(function () {
+    Route::post('/list', [SubTypeController::class, 'listByTypeId']);
 });
 Route::prefix('/image')->group(function () {
     Route::post('/upload', [ImageController::class, 'upload']);

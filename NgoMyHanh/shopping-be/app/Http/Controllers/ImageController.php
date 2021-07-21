@@ -1,43 +1,24 @@
 <?php
 
 namespace App\Http\Controllers;
-use Carbon\Carbon;
 
 use App\Models\Image;
 use Illuminate\Http\Request;
+use App\Http\Requests\ImagePostRequest;
+use App\Services\ImageService;
 
 
 class ImageController extends Controller
 {
-    function upload(Request $request){
-        $app_url="http://localhost:8000/";
-        $request->validate([
-            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
-        ]);
-        
-        if ($request->hasFile('file')) {
-            $file = $request->file;
-           
+    private $image_service;
 
-            $date = Carbon::now();
-            $milliseconds = (int)round(microtime(true) * 1000);
-            $image_name=$date->toDateString().$milliseconds.$file->getClientOriginalName();
+    public function __construct(
+        ImageService $ImageService
 
-            $storedPath = $file->move('images', $image_name);
-
-            $image =[];
-            $image['name']=$image_name;
-            $image['type']=$file->getClientOriginalExtension();
-            $image['path']=$app_url."images/".$image_name;
-
-            $image = Image::create($image);
-            return response()->json([
-                'status' => true,
-                'data'   => $image
-            ]);
-        }
-
-        return false;
-        
+    ){
+        $this->image_service = $ImageService;
+    }
+    function upload(ImagePostRequest $request){
+        return $this->image_service->upload($request);   
     }
 }

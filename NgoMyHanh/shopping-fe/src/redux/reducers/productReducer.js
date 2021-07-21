@@ -21,3 +21,11 @@ export const selectedProductReducer = (state = initialState,{type, payload}) => 
             return state;
     }
 }
+export const addProductReducer = (state = initialState,{type, payload}) => {
+    switch (type) {
+        case ActionTypes.ADD_PRODUCT:
+            return {...state, ...payload };
+        default:
+            return state;
+    }
+}
