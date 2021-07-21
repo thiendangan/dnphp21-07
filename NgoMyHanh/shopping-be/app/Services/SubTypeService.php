@@ -16,6 +16,11 @@ class SubTypeService
         $sub_type = $this->sub_type_repository->sortById()->get();
         return $sub_type;
     }
-    
+    public function listByTypeId(Request $request)
+    {
+        $sub_type = $this->sub_type_repository->findByTypeId($request['type_id'])->get();
+        return $sub_type;
+    }
+
     
 }

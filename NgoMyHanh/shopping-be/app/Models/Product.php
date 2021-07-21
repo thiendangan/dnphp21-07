@@ -8,7 +8,11 @@ use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class Product extends Model
 {
+    use \Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
     use HasFactory;
+    protected $casts = [
+        'sub_image_ids' => 'json',
+    ];
     public $table = "product";
     protected $fillable = [
         'code',
@@ -20,7 +24,25 @@ class Product extends Model
         'image_id',
         'sub_image_ids'
     ];
+    protected $appends = [
+        'type_name',
+        'sub_type_name',
+        'image_path',
+    ];
 
+    public function getTypeNameAttribute(){
+        $type = $this->Type;
+        return $this->type_name = $type->name;
+    }
+    public function getSubTypeNameAttribute(){
+        $sub_type = $this->SubType;
+        return $this->sub_type_name = $sub_type->name;
+    }
+    public function getImagePathAttribute(){
+        $image = $this->Image;
+        return $this->image_path = $image->path;
+    }
+    
     public function Type()
     {
         return $this->belongsTo(Type::class);
@@ -33,17 +55,15 @@ class Product extends Model
     {
         return $this->belongsTo(Image::class);
     }
+    public function SubImages()
+    {
+        return $this->belongsToJson(Image::class,'sub_image_ids');
+    }
     
     public static function boot()
     {
         parent::boot();
         self::creating(function($product) {
-            // $prefix = generateRandomString(2); 
-            // $code = IdGenerator::generate(['table' => 'product', 'length' => 6, 'prefix' => $prefix]);
-            // dd($code);
-            // $product->code = $code;
-            // return $product;
-
             $string=generateRandomString(2);
             $number=generateRandomNumber(4);
             $product->code = $string.$number;

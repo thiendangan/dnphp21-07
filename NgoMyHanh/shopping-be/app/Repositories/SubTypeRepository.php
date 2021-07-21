@@ -16,6 +16,9 @@ class SubTypeRepository
     function sortById(){
         return $this->sub_type->orderBy('id', 'desc');
     }
+    function findByTypeId($type_id){
+        return $this->sub_type-> Where('type_id',$type_id);
+    }
 
     
 }

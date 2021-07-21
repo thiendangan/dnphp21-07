@@ -18,6 +18,9 @@ class ProductRepository
         return $this->product->create($product);
     }
 
+    function sortById(){
+        return $this->product->orderBy('id', 'desc');
+    } 
     public function findByTypeId($type_id){
         return $this->product->Where('type_id',$type_id);    
     }
@@ -32,11 +35,17 @@ class ProductRepository
         return tap($this->product::findOrFail($product["id"]))
         ->update($product);
     }
-    public function deleteById(){
-        return $this->product->delete();
+    public function delete($product){
+        return $product->delete();
     }
     public function findByName($name)
     {
         return $this->product->where('name','like','%' . $name . '%');
     }
+    public function findByKeyWord($product,$key_word)
+    {
+        return $product->where('name','like','%' . $key_word . '%')
+                       ->orWhere('code', 'like','%' . $key_word . '%'); 
+    }
+
 }
