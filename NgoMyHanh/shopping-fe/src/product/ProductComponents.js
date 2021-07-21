@@ -3,11 +3,11 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const ProductComponent = () => {
-    const products = useSelector((state)=>state.allProducts.products);
-    const renderList = products.map((product) => {
+    const products = useSelector((state)=>state.allProducts.products.data);
+    const renderList = products?.map((product) => {
         const {id,name,price,image_path}=product;
         return (
-            <div className="col-3" key={id}>
+            <div className="col-6 col-md-3" key={id}>
             <Link to={`/product/${id}`}>
                 <div className="card text-center shadow p-2 mb-2 bg-body rounded">
                     <img src={image_path}
