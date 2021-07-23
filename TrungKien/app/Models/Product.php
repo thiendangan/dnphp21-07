@@ -39,13 +39,4 @@ class Product extends Model
     {
         return $this->category->ProductType->product_type_id;
     }
-    
-    // public static function getProductInfor(){
-    //     $products = Product::orderBy('updated_at', 'DESC')->get();
-    //     foreach($products as $product){
-    //         $product->product_category_name = $product->category->product_category_name;
-    //         $product->product_image = explode(",", $product->product_image)[0];
-    //     }
-    //     return  $products;
-    // }
 }

@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use App\Services\ListProductService;
 
 
-// use function PHPSTORM_META\elementType;
-
 class ListProductController extends Controller
 {
   protected $ListProductService;
@@ -23,14 +21,12 @@ class ListProductController extends Controller
   }
   function searchProducts(Request $request)
   {
-
     return  $this->ListProductService->searchProductsService($request);
-    
   }
-  function detailProduct($id){
-
+  function detailProduct($id)
+  {
     $productInfor = $this->ListProductService->getSpecificProductService($id);
     $productTypes = $this->ListProductService->getProductTypesService();
-    return view('client\detailProduct')->with('productInfor' , $productInfor)->with('productTypes',$productTypes);
+    return view('client\detailProduct')->with('productInfor', $productInfor)->with('productTypes',$productTypes);
   }
 }
