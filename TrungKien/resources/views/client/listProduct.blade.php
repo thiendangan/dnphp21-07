@@ -3,7 +3,7 @@
 
 <div class="header row">
     <div class="col-lg-3 col-md-4 col-sm-12">
-        <a href="/">Phạm Trung Kiên</a>
+        <a href="/">NCC Company</a>
     </div>
     <form class="search col-lg-9 col-md-8 col-sm-12">
         <select class="form-control" id="productTypes">

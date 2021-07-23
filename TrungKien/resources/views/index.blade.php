@@ -19,7 +19,7 @@
 						</svg>
 					</div>
 					<div class="col-sm-9 col-lg-7 widget-right">
-						<div class="large">{{$global_infor[0]}}</div>
+						<div class="large">{{$global_infor['product_amount']}}</div>
 						<div class="text-muted">Sản phẩm</div>
 					</div>
 				</div>
@@ -34,7 +34,7 @@
 						</svg>
 					</div>
 					<div class="col-sm-9 col-lg-7 widget-right">
-						<div class="large">{{$global_infor[1]}}</div>
+						<div class="large">{{$global_infor['category_amount']}}</div>
 						<div class="text-muted">Danh mục</div>
 					</div>
 				</div>
@@ -49,7 +49,7 @@
 						</svg>
 					</div>
 					<div class="col-sm-9 col-lg-7 widget-right">
-						<div class="large">{{$global_infor[2]}}</div>
+						<div class="large">{{$global_infor['product_type_amount']}}</div>
 						<div class="text-muted">Loại sản phẩm</div>
 					</div>
 				</div>
