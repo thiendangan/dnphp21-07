@@ -18,8 +18,8 @@ class ProductTypeService{
      }
      public  function getIndexPageService()
      {
-       $currentPage = $this->ProductTypesService()->toArray()['current_page'];
-       $perPage = $this->ProductTypesService()->toArray()['per_page'];
+       $currentPage = $this->ProductTypesService()->currentPage();
+       $perPage = $this->ProductTypesService()->perPage();
        $index = $perPage * ($currentPage - 1) + 1;
        return $index;
      }
