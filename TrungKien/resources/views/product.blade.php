@@ -11,7 +11,7 @@
 	<div class="row">
 		<div class="col-xs-12 col-md-12 col-lg-12">
 
-			<div class="panel panel-primary">
+			<div class="panel panel-primary" style="min-height: 67vh;">
 				<div class="panel-heading">Danh sách sản phẩm</div>
 				<div class="panel-body">
 					<div class="bootstrap-table">

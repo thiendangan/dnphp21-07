@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreAndUpdateProductRequest;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Services\ProductService;
 
 class ProductController extends Controller
@@ -42,13 +43,12 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreAndUpdateProductRequest $request)
+    public function store(StoreProductRequest $request)
     {
         $request->validated();
-        $message =  $this->product->SaveProduct($request,$request->ProductCategory,$request->ProductName, $request->Productprice,$request->Description);
+        $message =  $this->product->SaveProductService($request,'ProductImage');
         return back()->with('success', $message);
     }
-
     /**
      * Display the specified resource.
      *
@@ -80,12 +80,11 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreAndUpdateProductRequest $request,$id )
-    {
+    public function update(UpdateProductRequest $request,$id)
+    {  
         $request->validated();
-        $message =  $this->product->updateProductService($id,$request,$request->ProductCategory,$request->ProductName, $request->Productprice,$request->Description);
-        
-        return redirect()->route('product.index')->with('success', $message);
+        $message = $this->product->updateProductService($id,$request,'ProductImageUpdate');
+        return back()->with('success',$message); // return to edit view form with succcess message to show.
     }
 
     /**

@@ -22,8 +22,8 @@ class ProductService
     }
     public  function getIndexPageService()
     {
-        $currentPage = $this->ProductsService()->toArray()['current_page'];
-        $perPage = $this->ProductsService()->toArray()['per_page'];
+        $currentPage = $this->ProductsService()->currentPage();
+        $perPage = $this->ProductsService()->perPage();
         $index = $perPage * ($currentPage - 1) + 1;
         return $index;
     }
@@ -31,30 +31,30 @@ class ProductService
     {
         return  $this->product->getAllProductType();
     }
-    public  function SaveProduct($request, $categoryId, $productName, $productPrice, $productDescription)
+    public  function SaveProductService($request,$name)
     {
-        $images =  $this->resizeImageService($request, 'ProductImage');
-        $this->product->createRepository($images, $categoryId, $productName, $productPrice, $productDescription);
+        $images =  $this->resizeImageService($request, $name);
+        $this->product->createRepository($images,$request->ProductCategory, $request->ProductName, $request->Productprice,$request->Description);
         return 'Thêm mới sản phẩm thành công !';
     }
     public  function getSpecificProductService($id)
     {
-        return  $this->product->getRepository($id)->first();
+        return  $this->product->getRepository($id);
     }
-    public function updateProductService($id, $request, $categoryId, $productName, $productPrice, $productDescription)
+    public function updateProductService($id, $request,$Name)
     {
-        $images =  $this->resizeImageService($request, 'ProductImage');
+        $images =  $this->resizeImageService($request,$Name);
         foreach ($request->backEndImages as $item) {
             if ($item != 'haschanged') {
                 $images = $images . $item . ",";
             }
         }
-        $message = $this->product->updateRepository($id, $images, $categoryId, $productName, $productPrice, $productDescription);
+        $message = $this->product->updateRepository($id, $images,$request->ProductCategory,$request->ProductName, $request->Productprice,$request->Description);
         return  $message;
     }
     public function destroyProductService($id)
     {
-        $product =  $this->product->getRepository($id)->first();
+        $product =  $this->product->getRepository($id);
         foreach ($product->product_image as $item) {
             if (!empty($item)) {
                 unlink(public_path() . '/ProductImage/' . $item);
@@ -72,7 +72,7 @@ class ProductService
     {
         $imagelinks = "";
         if ($request->hasfile($name)) {
-            foreach ($request->file('ProductImage') as $file) {
+            foreach ($request->file($name) as $file) {
                 $newName = time() . Str::random(4);
                 $fileName =   $newName . '.' . $file->extension();
                 $imageResize = Image::make($file->getRealPath());

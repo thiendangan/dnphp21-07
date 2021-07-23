@@ -19,7 +19,7 @@
 						<strong>{{ $message }}</strong>
 					</div>
 					@endif
-					<form method="POST" id="EditProduct_form" enctype="multipart/form-data" action="{{route('product.update',$productInfor->product_id)}}">
+					<form method="POST" id="EditProduct_form" enctype="multipart/form-data" action="{{ route('product.update',$productInfor->product_id)}}">
 						@method('PUT')
 						@csrf
 						<div class="row" style="margin-bottom:40px">
@@ -105,7 +105,7 @@
 																			} else {
 																				echo asset('ProductImage/plus1.jpg');
 																			} ?> " alt="" width="130px" height="130px" style="border:1px solid #333;object-fit:cover"></label>
-										<input id="edit_image{{$i}}" type="file" name="ProductImage[]" class="form-control images" accept="image/png, image/jpeg,image/jpg" style="display:none;object-fit:cover">
+										<input id="edit_image{{$i}}" type="file" name="ProductImageUpdate[]" class="form-control images" accept="image/png, image/jpeg,image/jpg" style="display:none;object-fit:cover">
 									</div>
 									@endfor
 								</div>

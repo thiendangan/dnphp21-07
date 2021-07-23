@@ -18,8 +18,8 @@ class ProductRepository
         return $this->product->orderBy('created_at', 'DESC');
     }
     public function getRepository($product_id)
-    {
-        return $this->product->where('product_id', $product_id);
+    {   
+        return $this->product->where('product_id', $product_id)->first();
     }
     public function createRepository($images, $categoryId, $productName, $productPrice, $productDescription)
     {
@@ -34,10 +34,9 @@ class ProductRepository
     }
     public function updateRepository($product_id,$images, $categoryId, $productName, $productPrice, $productDescription)
     {
-        $product = $this->getRepository($product_id)->first();
+        $product = $this->getRepository($product_id);
         $product->product_image = $images;
         $product->product_category_id  = $categoryId;
-        $product->product_id =  Str::random(5);
         $product->product_name = ucfirst($productName);
         $product->product_price = $productPrice;
         $product->product_description = ucfirst($productDescription);
