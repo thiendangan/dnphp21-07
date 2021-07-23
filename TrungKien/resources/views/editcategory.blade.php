@@ -10,7 +10,7 @@
 	<!--/.row-->
 	<div class="row">
 		<div class="col-xs-12 col-md-12 col-lg-12">
-			<div class="panel panel-primary">
+			<div class="panel panel-primary" style="min-height: 67vh;">
 				<div class="panel-heading">
 					Sửa danh mục sản phẩm
 				</div>
@@ -18,29 +18,26 @@
 					<form class="form-group" action="{{ route('category.update',$categroyInfor->product_category_id)}}" method="POST">
 						@csrf
 						@method('PUT')
-						<div class="form-group">
-							<label style="margin-bottom:0.5rem; display:block">Tên danh mục sản phẩm cũ: <span style="font-weight: normal;">{{ $categroyInfor->	product_category_name}}</span> </label>
-						</div>
-						@if ($errors->has('category_name'))
+						@if ($errors->has('categoryName'))
 						<div class="alert alert-danger">
-							{{ $errors->first('category_name') }}
+							{{ $errors->first('categoryName') }}
 						</div>
 						@endif
 						<div class="form-group">
-							<label>Nhập tên danh mục sản phẩm mới</label>
-							<input type="text" required name="categoryName" class="form-control" placeholder="Tên loại sản phẩm ...">
+							<label>Tên danh mục sản phẩm</label>
+							<input type="text" required name="categoryName" class="form-control" value="{{$categroyInfor->product_category_name}}">
 						</div>
 
-						@if ($errors->has('product_type'))
+						@if ($errors->has('productType'))
 						<div class="alert alert-danger">
-							{{ $errors->first('product_type') }}
+							{{ $errors->first('productType') }}
 						</div>
 						@endif
 						<label class="form-label">Chọn loại sản phẩm</label>
 						<select class="form-control form-control-lg" name="productType">
 							<option selected disabled value="">Loại sản phẩm</option>
 							@foreach($productTypes as $item)
-							<option value="{{$item->product_type_id}}">{{$item->product_type_name}}</option>
+							<option value="{{$item->product_type_id}}" <?php if($item->product_type_id == $categroyInfor->product_type_id) echo "selected"?>>{{$item->product_type_name}}</option>
 							@endforeach
 						</select>
 						<input type="submit" value="Edit" class="btn btn-warning" style="margin-top: 1rem;">

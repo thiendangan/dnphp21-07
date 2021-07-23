@@ -20,7 +20,7 @@ class CategoryRepository
     }
     public function getRepository($category_id)
     {
-        return $this->category->where('product_category_id', $category_id);
+        return $this->category->where('product_category_id', $category_id)->first();
     }
 
     public function createRepository($categoryName, $productType)
@@ -34,7 +34,7 @@ class CategoryRepository
     }
     public function updateRepository($id, $categoryName, $productType)
     {
-        $category =$this->getRepository($id)->first();
+        $category =$this->getRepository($id);
         $category->product_category_name  = ucfirst($categoryName);
         $category->product_type_id  = $productType;
         $category->save();

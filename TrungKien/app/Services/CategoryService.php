@@ -17,7 +17,7 @@ class CategoryService
     return $this->category->getAllRepository()->paginate(5);
   }
   public function getCategoryService($id){
-    return $this->category->getRepository($id)->first();
+    return $this->category->getRepository($id);
   }
   public  function ProductTypesService()
   {
@@ -26,8 +26,8 @@ class CategoryService
 
   public  function getIndexPageService()
   {
-    $currentPage = $this->CategoriesService()->toArray()['current_page'];
-    $perPage = $this->CategoriesService()->toArray()['per_page'];
+    $currentPage = $this->CategoriesService()->currentPage();
+    $perPage = $this->CategoriesService()->perPage();
     $index = $perPage * ($currentPage - 1) + 1;
     return $index;
   }
