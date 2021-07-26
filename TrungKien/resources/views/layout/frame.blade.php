@@ -30,9 +30,9 @@
                     <li class="dropdown pull-right">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked male-user">
                                 <use xlink:href="#stroked-male-user"></use>
-                            </svg> User <span class="caret"></span></a>
+                            </svg> <?php echo  session()->get( 'userName') ?> <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="#"><svg class="glyph stroked cancel">
+                            <li><a href="{{ route('logout')}}"><svg class="glyph stroked cancel">
                                         <use xlink:href="#stroked-cancel"></use>
                                     </svg> Logout</a></li>
                         </ul>
@@ -84,21 +84,21 @@
             $(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
         }(window.jQuery);
 
-        $(window).on('resize', function() {
-            if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
-        })
-        $(window).on('resize', function() {
-            if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
-        })
+        // $(window).on('resize', function() {
+        //     if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+        // })
+        // $(window).on('resize', function() {
+        //     if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+        // })
 
         // ajax for select all category from one ProductType
         if (typeof($('#addProductType')) !== 'undefined') {
-            $('#addProductType').on('change', function() {
+            $('#addProductType').on('change', function(){
                 $.ajax({
                     type: 'POST',
-                    url: "<?= route('ajax') ?>",
+                    url: "<?= route('getProductTypeAjax')?>",
                     data: {
-                        category: $('#addProductType').val(),
+                        ProductType: $('#addProductType').val(),
                         _token: "{{ csrf_token() }}"
                     },
                     success: function(response) {

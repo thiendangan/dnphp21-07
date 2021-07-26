@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreAndUpateProductTypRequest;
+use App\Services\ProductTypeService;
 
 class ProductTypeController extends Controller
 {
@@ -12,9 +13,17 @@ class ProductTypeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    protected $productType;
+
+    public function __construct(ProductTypeService $productType)
+    {
+        $this->productType = $productType;
+    }
     public function index()
     {
-        return view('producttype')->with('title',$this->title);
+        $product_types = $this->productType->ProductTypesService();
+        $index = $this->productType->getIndexPageService();
+        return view('producttype', ['product_types' => $product_types, 'index' => $index,'title' => $this->title]);
     }
 
     /**
@@ -33,9 +42,11 @@ class ProductTypeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreAndUpateProductTypRequest $request)
     {
-        //
+        $request->validated();
+        $message = $this->productType->saveProductTypeService($request->ProductType);
+        return back()->with('success', $message);
     }
 
     /**
@@ -57,7 +68,8 @@ class ProductTypeController extends Controller
      */
     public function edit($id)
     {
-        return view('editproducttype')->with('title',$this->title);
+        $product_type_name = $this->productType->getProductTypeService($id);
+        return view('editproducttype', ['product_type_name' => $product_type_name, 'title' => $this->title]);
     }
 
     /**
@@ -67,9 +79,11 @@ class ProductTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreAndUpateProductTypRequest $request, $id)
     {
-        //
+        $request->validated();
+        $message = $this->productType->updateProductTypeService($id,$request->ProductType);
+        return redirect('/admin/producttype ')->with('success', $message);
     }
 
     /**
@@ -80,6 +94,7 @@ class ProductTypeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $message = $this->productType->destroyProductTypeService($id);
+        return back()->with('success',$message);
     }
 }

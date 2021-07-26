@@ -11,12 +11,15 @@ class ProductType extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
-    public function get_all_category(){
-        return $this->hasMany('App\Models\Category','product_type_id','product_type_id');
-        // lấy hết tất cả các category thuộc một thể loại
+    // lấy hết tất cả các category thuộc một thể loại
+    public function categories()
+    {
+        return $this->hasMany('App\Models\Category', 'product_type_id', 'product_type_id');
     }
-    public function get_all_product(){
-        return $this->hasManyThrough('App\Models\Product','App\Models\Category','product_type_id','product_category_id','product_type_id');
-         // lấy hết tất cả các product thuộc một thể loại
+    
+    // lấy hết tất cả các product thuộc một thể loại
+    public function products()
+    {
+        return $this->hasManyThrough('App\Models\Product', 'App\Models\Category', 'product_type_id', 'product_category_id', 'product_type_id');
     }
 }

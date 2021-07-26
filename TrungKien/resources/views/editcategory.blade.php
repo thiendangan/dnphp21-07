@@ -10,15 +10,37 @@
 	<!--/.row-->
 	<div class="row">
 		<div class="col-xs-12 col-md-12 col-lg-12">
-			<div class="panel panel-primary">
+			<div class="panel panel-primary" style="min-height: 67vh;">
 				<div class="panel-heading">
-					Sửa danh mục
+					Sửa danh mục sản phẩm
 				</div>
 				<div class="panel-body">
-					<form class="form-group">
-						<label>Tên danh mục:</label>
-						<input type="text" name="name" class="form-control" placeholder="Tên danh mục...">
-					    <input type="submit" value="Submit" class="btn btn-warning" style="margin-top: 1rem;">
+					<form class="form-group" action="{{ route('category.update',$categroyInfor->product_category_id)}}" method="POST">
+						@csrf
+						@method('PUT')
+						@if ($errors->has('categoryName'))
+						<div class="alert alert-danger">
+							{{ $errors->first('categoryName') }}
+						</div>
+						@endif
+						<div class="form-group">
+							<label>Tên danh mục sản phẩm</label>
+							<input type="text" required name="categoryName" class="form-control" value="{{$categroyInfor->product_category_name}}">
+						</div>
+
+						@if ($errors->has('productType'))
+						<div class="alert alert-danger">
+							{{ $errors->first('productType') }}
+						</div>
+						@endif
+						<label class="form-label">Chọn loại sản phẩm</label>
+						<select class="form-control form-control-lg" name="productType">
+							<option selected disabled value="">Loại sản phẩm</option>
+							@foreach($productTypes as $item)
+							<option value="{{$item->product_type_id}}" <?php if($item->product_type_id == $categroyInfor->product_type_id) echo "selected"?>>{{$item->product_type_name}}</option>
+							@endforeach
+						</select>
+						<input type="submit" value="Edit" class="btn btn-warning" style="margin-top: 1rem;">
 					</form>
 				</div>
 			</div>

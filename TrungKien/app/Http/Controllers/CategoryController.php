@@ -2,21 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreAndUpdateCategoryRequest;
+use App\Services\CategoryService;
 
 class CategoryController extends Controller
 {
     public $title = 'category';
+    protected $category;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct(CategoryService $category)
+    {
+      $this->category = $category;
+    }
     public function index()
     {
-        return view('category')->with('title',$this->title);
+        $productCategories = $this->category->CategoriesService();
+        $productTypes  =   $this->category->ProductTypesService();
+        $index =  $this->category->getIndexPageService();
+        return view('category', ['productCategories' => $productCategories, 'productTypes' => $productTypes,'index' => $index, 'title' => $this->title]);
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -33,11 +42,12 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreAndUpdateCategoryRequest $request)
     {
-        //
+        $request->validated();
+        $message = $this->category->SaveCategoryService($request->categoryName,$request->productType);
+        return back()->with('success', $message);
     }
-
     /**
      * Display the specified resource.
      *
@@ -57,9 +67,10 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        return view('editcategory')->with('title',$this->title);
+        $categroyInfor = $this->category->getCategoryService($id);
+        $productTypes = $this->category->ProductTypesService();
+        return view('editcategory', ['categroyInfor' => $categroyInfor, 'productTypes' => $productTypes, 'title' => $this->title]);
     }
-
     /**
      * Update the specified resource in storage.
      *
@@ -67,9 +78,11 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreAndUpdateCategoryRequest $request, $id)
     {
-        //
+        $request->validated();
+        $message = $this->category->updateCategoryService($id,$request->categoryName,$request->productType);
+        return redirect('/admin/category')->with('success', $message);
     }
 
     /**
@@ -80,6 +93,7 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $message = $this->category->destroyCategoryService($id);
+        return back()->with('success', $message );
     }
 }

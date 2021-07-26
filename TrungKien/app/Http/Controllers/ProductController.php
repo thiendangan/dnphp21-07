@@ -3,30 +3,30 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Product;
-use App\Models\ProductType;
-use Illuminate\Support\Str;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
+use App\Services\ProductService;
 
 class ProductController extends Controller
 {
     public  $title = 'product';
+    protected $product;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    
+    public function __construct(ProductService $product)
     {
-        $products = new Product();
-        $temp =  $products->getproductData()->toArray();
-        $temp1 = $products->getproductinfor();
-        for($i = 0 ; $i< count($temp);$i++){
-            $temp[$i]->product_category_name =  $temp1 [$i];
-        }
-       
-        return view('product',['products' => $temp,'i' => 1,'title'=>$this->title]);
+        $this->product = $product;
     }
-
+    public function index()
+    {   
+        $products = $this->product->ProductsService();
+        $index = $this->product->getIndexPageService();
+        return view('product', ['products' => $products, 'index' => $index, 'title' => $this->title]);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -34,48 +34,21 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $ProductTypes = ProductType::all('product_type_name');
-        return view('addproduct',['title'=> $this->title , 'ProductTypes' => $ProductTypes]);
+        $ProductTypes = $this->product->ProductTypesService();
+        return view('addproduct', ['title' => $this->title, 'ProductTypes' => $ProductTypes]);
     }
-
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        $request->validate([
-            'ProductName' => 'required|unique:posts|max:200',
-            'Productprice' => 'required|max:20|numeric',
-            'ProductType' => 'required',
-            'ProductCategory' => 'required',
-            'Description' => 'max:200',
-            'ProductImage.*' => 'bail|required|image|mimes:jpg,png,jpeg|max:2048'
-        ],[
-
-            'ProductName.required' => "Vui lòng nhập tên sản phẩm",
-            'ProductName.unique' => "Tên đã tồn tại vui lòng nhập tên khác",
-            'ProductName.max' => 'Tên dài hơn 200 kí tự vui lòng nhập lại',
-            'Productprice.required' => "Vui lòng nhập giá của sản phẩm",
-            'Productprice.max' => "Vui lòng nhập giá có số kí tự nhỏ hơn 20",
-            'Productprice.numeric' => "Vui lòng nhập giá sản phẩm bằng số",
-            'ProductType.required' => "Vui lòng chọn loại sản phẩm",
-            'ProductCategory.required' => "Vui lòng chọn danh mục sản phẩm",
-            'Description.max' => 'Vui lòng nhập description nhỏ hơn 200 kí tự',
-            'ProductImage.*.required' => "Vui lòng upload ảnh sản phẩm",
-            'ProductImage.*.image'   => "vui lòng upload file ảnh",
-            'ProductImage.*.mimes'   => "vui lòng upload file .jpg, .jpeg ,.png",
-        ]);
-        $product = new Product();
-        $product->product_id = Str::random(5);
-        $product->product_name = $request->ProductName;
-        $product->product_price = $request->ProductPrice;
-        $product->product_description =  $request->Description;
-        // $product->product_category_id = ;
+        $request->validated();
+        $message =  $this->product->SaveProductService($request,'ProductImage');
+        return back()->with('success', $message);
     }
-
     /**
      * Display the specified resource.
      *
@@ -84,9 +57,10 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        return view('detailproduct')->with('title',$this->title);
+        // dung orm
+        $productInfor = $this->product->getSpecificProductService($id);
+        return view('detailproduct', ['title' => $this->title, 'productInfor' => $productInfor]);
     }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -95,9 +69,10 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        return view('editproduct')->with('title',$this->title);
+        $ProductTypes = $this->product->ProductTypesService();
+        $productInfor = $this->product->getSpecificProductService($id);
+        return view('editproduct', ['title' => $this->title, 'ProductTypes' => $ProductTypes, 'productInfor' => $productInfor]);
     }
-
     /**
      * Update the specified resource in storage.
      *
@@ -105,9 +80,11 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(UpdateProductRequest $request,$id)
+    {  
+        $request->validated();
+        $message = $this->product->updateProductService($id,$request,'ProductImageUpdate');
+        return back()->with('success',$message); // return to edit view form with succcess message to show.
     }
 
     /**
@@ -118,6 +95,15 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        return view('product')->with('title',$this->title);
+        $message =  $this->product->destroyProductService($id);
+        return back()->with('success',$message );
+    }
+
+    // function to settle when ajax call to get all Categories
+
+    public function productType(Request $request)
+    {
+        $categories = $this->product->getCategoryService($request->ProductType);
+        return json_encode($categories, JSON_UNESCAPED_UNICODE);
     }
 }
