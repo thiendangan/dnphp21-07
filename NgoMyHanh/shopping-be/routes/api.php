@@ -8,6 +8,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TypeController;
 use App\Http\Controllers\SubTypeController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\AuthController;
+
 
 
 
@@ -29,6 +31,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     // dd($request);
     return $request->user();
 });
+Route::prefix('/user')->group(function () {
+    Route::post('/login', [AuthController::class, 'login']);
+});
 Route::prefix('/product')->group(function () {
     Route::post('/create', [ProductController::class, 'create']);
     Route::post('/update', [ProductController::class, 'update']);
@@ -37,6 +42,8 @@ Route::prefix('/product')->group(function () {
     
     Route::post('/list', [ProductController::class, 'list']);
     Route::post('/search', [ProductController::class, 'search']);
+    Route::post('/test', [ProductController::class, 'test']);
+
 });
 Route::prefix('/type')->group(function () {
     Route::post('/detail', [TypeController::class, 'find']);

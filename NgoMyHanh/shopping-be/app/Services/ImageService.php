@@ -18,7 +18,6 @@ class ImageService
     {
         $app_url    ="http://localhost:8000/";
         $request->validated();
-        
         if ($request->hasFile('file')) {
             $file           = $request->file;
             $date           = Carbon::now();
@@ -33,10 +32,7 @@ class ImageService
             $image['path']  = $app_url."images/".$image_name;
 
             $image          = $this->image_repository->create($image);
-            return response()->json([
-                'status' => true,
-                'data'   => $image
-            ]);
+            return response()->jsonOk($image, 200);
         }
 
         return false;

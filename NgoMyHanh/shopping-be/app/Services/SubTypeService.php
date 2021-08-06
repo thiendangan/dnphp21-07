@@ -14,12 +14,12 @@ class SubTypeService
     public function list()
     {
         $sub_type = $this->sub_type_repository->sortById()->get();
-        return $sub_type;
+        return response()->jsonOk($sub_type, 200);
     }
     public function listByTypeId(Request $request)
     {
         $sub_type = $this->sub_type_repository->findByTypeId($request['type_id'])->get();
-        return $sub_type;
+        return response()->jsonOk($sub_type, 200);
     }
 
     

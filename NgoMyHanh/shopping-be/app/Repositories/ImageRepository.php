@@ -17,6 +17,13 @@ class ImageRepository
     {
         return $this->image->create($image);
     }
+    public function delete($image){
+        return $image->delete();
+    }
+    public function findById($id)
+    {
+        return $this->image->find($id);
+    }
 
     
 }

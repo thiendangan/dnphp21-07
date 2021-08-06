@@ -14,13 +14,13 @@ class TypeService
     public function list()
     {
         $type = $this->type_repository->sortById()->get();
-        return $type;
+        return response()->jsonOk($type, 200);
     }
     public function find(Request $request)
     {
         $payload    = $request->all();
         $type       = $this->type_repository->findById($payload['id']);
-        return $type;
+        return response()->jsonOk($type, 200);
     }
     
 }
