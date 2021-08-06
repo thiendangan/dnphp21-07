@@ -94,7 +94,7 @@ const ListProduct = () => {
                 <td>
                     <th>
                         <Link to={`/product/edit/${id}`}>
-                        <button type="button" className="btn btn-success">Cập nhật</button>
+                        <button type="button" className="btn btn-success">Sửa</button>
                         </Link>
                     </th>
                     <th>
@@ -129,7 +129,7 @@ const ListProduct = () => {
 
     return(
         <div>
-        <table className="table">
+        <table className="table table-hover">
             <thead className="table-dark">
             <tr>
                 <th scope="col">STT</th>
@@ -145,9 +145,7 @@ const ListProduct = () => {
             </tbody>
         </table>
             {paginate()}
-        </div>
-
-              
+        </div>   
     )
 }
 

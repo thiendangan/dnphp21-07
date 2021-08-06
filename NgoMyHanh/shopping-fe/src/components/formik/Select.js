@@ -3,7 +3,7 @@ import {Field,ErrorMessage} from 'formik';
 import TextError from './TextError';
 
 function Select(props) {
-    const { label, name, options,...rest} = props;
+    const { id,name_default,label, name, options,...rest} = props;
     return (
         <div className="mb-3">
             <label className="form-label" htmlFor={name}>{label}</label>   
@@ -13,6 +13,7 @@ function Select(props) {
                     name={name} 
                     {...rest}  
                     >
+            <option value={id}  selected disabled hidden>{name_default}</option>
             <option key="select an option" value="">
                             Chọn
             </option>

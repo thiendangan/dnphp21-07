@@ -6,10 +6,7 @@ const ProductManagement = () => {
     return(
         <div className="container">
         <div className="row">
-            <div className="col-md-1">
-                xin chao
-            </div>
-            <div className="col-md-7">
+            <div className="col-md-8">
                 <div className="row">
                     <ListProduct/>
                 </div>

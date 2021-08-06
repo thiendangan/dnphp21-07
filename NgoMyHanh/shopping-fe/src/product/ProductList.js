@@ -119,13 +119,9 @@ const ProductList = () => {
     return(
         <div className="container">
         <div className="row">
-            <div className="col-2">
-                xin chao
-            </div>
-            <div className="col-10">
-                <div className="row mb-5">
-                <div className="col-4">
-                    <label className="form-label">Loại sản phẩm</label>
+            <div className="col-12">
+                <div className="row m-5">
+                <div className="col-12 col-lg-4 p-1">
                     <select id="select" 
                             name="type_id"
                             onChange={onChangeRequest}
@@ -135,8 +131,7 @@ const ProductList = () => {
                         {renderListType}
                     </select>
                 </div>
-                <div className="col-4">
-                    <label className="form-label">Danh mục sản phẩm</label>
+                <div className="col-12 col-lg-4 p-1">
                     <select id="select" 
                             name="sub_type_id"
                             onChange={onChangeRequest}
@@ -146,13 +141,14 @@ const ProductList = () => {
                         {renderListSubType}
                     </select>
                 </div>
-                <div className="col-4">
-                    <label  className="form-label">Tìm kiếm</label>
-                    <input type="text" 
+                <div className="col-12 col-lg-4 p-1">
+                    <input type="search" 
+                           placeholder="Search"
                            onChange={onChangeRequest}
                            name="key_word"
                            className="form-control" 
-                           aria-describedby="emailHelp" />                </div>
+                           aria-describedby="emailHelp" />                
+                    </div>
                 </div>
                 <div className="row">
                     <ProductComponent/>

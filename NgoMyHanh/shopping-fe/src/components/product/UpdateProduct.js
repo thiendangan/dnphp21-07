@@ -1,45 +1,66 @@
 import React, {useEffect,useState} from "react";
 import { useDispatch,useSelector } from "react-redux";
 import axios from "axios";
-import {addProduct, selectedProduct} from '../../redux/actions/productActions';
+import {selectedProduct} from '../../redux/actions/productActions';
 import {selectedType,setTypes} from '../../redux/actions/typeActions';
 import {setSubTypes} from '../../redux/actions/subTypeActions';
 import { ServiceTypes } from "../../redux/contants/service-types";
-import { addImage} from '../../redux/actions/imageAction';
-import UpdateImage from "../UpdateImage";
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form } from 'formik';
  import * as Yup from 'yup';
 import FormikControl from "../formik/FormikControl";
+import { useParams } from "react-router-dom";
+
 
 const UpdateProduct = () => {
     const url_api   = ServiceTypes.URL_API;
+    const { id } = useParams();
+
     const types     = useSelector((state) => state.allTypes.types);
     const subTypes  = useSelector((state) => state.allSubTypes.subTypes);
-    const imageId  = useSelector((state) => state.addImage.id);
+    const product = useSelector(state => state.product);
+    const images_position = useSelector(state => state.product.sub_images_position);
 
-    const [imageIdToWait, setImageIdToWait] = useState();
-
-    const [file, setFile] = useState();
+    const [position,setPosition] = useState({
+        1:"https://static.thenounproject.com/png/187803-200.png",
+        2:"https://static.thenounproject.com/png/187803-200.png",
+        3:"https://static.thenounproject.com/png/187803-200.png",
+        4:"https://static.thenounproject.com/png/187803-200.png"
+    })
 
     
+    const test = () => {
+        if (images_position){
+            Object.keys(images_position).forEach(key => {
+                 setPosition({...position,1:images_position[key].path});
+                 console.log(position);
+              });
+    }
+    }
+    
    
-      
-
     const dispatch  = useDispatch();
     const [typeId, setTypeId] = useState('');
-    const [newProduct, setNewProduct] = useState({
-		name: '',
-		price: '',
-		type_id: '',
-		sub_type_id: '',
-        note:'',
+    const [checkDeleteImage, setCheckDeleteImage] = useState({
+        1: false,
+        2: false,
+        3: false,
+        4: false
+    });
+
+   
+    const {name,code,sub_type_id,type_id,price,note,type_name,sub_type_name,image_path}=product;
+
+    const [initialValues,setInitialValues] = useState({
+		name: name,
+		price: price,
+		type_id: type_id,
+		sub_type_id: sub_type_id,
+        note:note,
         image_id:'',
-        email:''
 	})
-    const { name, price,note} = newProduct;
-    const onChangeNewProductForm = event =>{
-        setNewProduct({ ...newProduct, [event.target.name]: event.target.value })
-    }
+
+    
+    
 
     const changeTypeId = (event) => {
         if (event.target.name==="type_id"){
@@ -47,51 +68,85 @@ const UpdateProduct = () => {
         console.log("type id = ",event.target.value);
     }
     }
+    
 
     
-    const uploadImage = async() => {
-        console.log("----------------------------------------------------------------");
-        console.log("UPLOAD IMAGES");
-        const formData = new FormData();      
+    const updateProduct = async(values) => {
+        const formData = new FormData(); 
+        if (values.file[0]){
         formData.append(
-            "file",
-             file,
-        );   
-        console.log("file = ",formData)
+            "file[0]",
+            values.file[0],
+        );  
+        }
+        if (values.file[1]){
+            formData.append(
+                "file[1]",
+                 values.file[1],
+            ); 
+        }
+        else 
+            if (product.sub_image_ids[1]&&checkDeleteImage){
+                formData.append(
+                    "file[1]",
+                     "delete",
+                ); 
+            }
+       
+
+        if (values.file[2]){
+        formData.append(
+            "file[2]",
+             values.file[2],
+        ); 
+    }
+    if (values.file[3]){
+        formData.append(
+            "file[3]",
+             values.file[3],
+        ); 
+    }
+    if (values.file[4]){
+        formData.append(
+            "file[4]",
+             values.file[4],
+        );  
+    }
+        formData.append(
+            "data",
+            JSON.stringify({
+                "id": id,
+                "name": values.name,
+                "price": values.price,
+                "type_id": values.type_id,
+                "sub_type_id": values.sub_type_id,
+                "note": values.note
+              })
+        );  
+        formData.append(
+            "check",
+            JSON.stringify({
+                "1": checkDeleteImage[1],
+                "2": checkDeleteImage[2],
+                "3": checkDeleteImage[3],
+                "4": checkDeleteImage[4]
+              })
+        );  
+       
+        console.log("file = ",formData);
+        console.log("check delete ",checkDeleteImage);
+        
         const response = await axios
-        .post(`${url_api}/image/upload`,
+        .post(`${url_api}/product/update`,
             formData
         )
         .catch((err) => {
             console.log("err ",err);
         })
-        console.log("imageCReate =  ",response.data.data);
-        if (response){
-            dispatch(addImage(response.data.data));
-            console.log("response.data.data",response.data.data)
-            setNewProduct({...newProduct,['image_id']: response.data.data.id});
-            setImageIdToWait(imageId);       
-        }
-        // setNewProduct({...newProduct,['image_id']: imageId});
+        console.log("imageCReate =  ",response);
       };
 
-    const createProduct = async () => {
-       
-        console.log("CREATE PRODUCT");
-        console.log("craete new product", newProduct );
-
-        const response = await axios
-        .post(`${url_api}/product/create`,
-          newProduct
-        )
-        .catch((err) => {
-            console.log("err ",err);
-        })
-        if (response){
-            dispatch(addProduct(response.data.data));
-        }
-       
-    }
+   
     
   
     const fetchTypes = async() => {
@@ -125,36 +180,32 @@ const UpdateProduct = () => {
         dispatch(setSubTypes(response.data));
     }
     
+    const fetchProductDetail = async(idProduct) => {
+        const response = await axios
+        .post(`http://localhost:8000/api/product/detail`,{
+            "id": idProduct,
+        })
+        .catch((err) => {
+            console.log("err ",err);
+        })
+        dispatch(selectedProduct(response?.data));
+    }
+    
+      useEffect(()=>{
+        test();
+         fetchProductDetail(id);
+         
+      },[id]);
 
     useEffect(() => {
         fetchTypeDetail(typeId);
         fetchSubTypes(typeId);
     },[typeId]);
 
-    useEffect(()=>{
-        createProduct()
-    },[imageIdToWait])
     useEffect(() => {
         fetchTypes();
+        fetchProductDetail(id);
     },[]);
-
-    
-
-  
-
-    const renderListType = types.map((type) => {
-        const {id,name}=type;
-        return (
-            <option value={id}>{name}</option>
-        )
-    });
-
-    const renderListSubType = subTypes.map((subType) => {
-        const {id,name}=subType;
-        return (
-            <option value={id}>{name}</option>
-        )
-    });
 
     const DisplayingErrorMessagesSchema = Yup.object().shape({
         name: Yup.string()
@@ -165,23 +216,33 @@ const UpdateProduct = () => {
         sub_type_id: Yup.number().required("Required"),
         price: Yup.number().required("Required")
             .min(0,'must >=0'),
-      });
+        // file: Yup.object().shape({
+        //     1: Yup.mixed().required("Required")
+        // }),
+      }); 
+
+      const formUpdate = () => {
+
+      }
     return(
-        <div>
-        <div>
+   
+    <div>
      
      <Formik
-       initialValues={newProduct}
+       initialValues={initialValues}
        validationSchema={DisplayingErrorMessagesSchema}
-       onSubmit={values => {
-         // same shape as initial values
-         console.log(values);
-       }}
+       onSubmit={(values, {resetForm}) => {
+            updateProduct(values);
+            console.log("values ",values.file);
+            console.log("check",checkDeleteImage.file1);
+        }}
        
      >
-       {formik => (
+       {({values,setFieldValue}) => (
+          
          <Form onChange={changeTypeId}>
-            
+             <div className="row p-5">
+            <div className="col-sm-6">
            <FormikControl 
                 control='input' 
                 label='Name' 
@@ -193,12 +254,16 @@ const UpdateProduct = () => {
                 label='Loại sản phẩm' 
                 name='type_id'
                 options={types}
+                name_default={type_name}
+                id={type_id}  
             />
             <FormikControl 
                 control='select'  
                 label='Danh mục sản phẩm' 
                 name='sub_type_id'
                 options={subTypes}
+                name_default={sub_type_name}
+                id={sub_type_id}
             />
             <FormikControl 
                 control='input' 
@@ -212,17 +277,62 @@ const UpdateProduct = () => {
                 name='note'
             />
             <FormikControl 
-                control='input' 
-                label='Mô tả' 
-                name='image'
-                type="file"
+                control='imageUpdate' 
+                label='' 
+                name='file[0]'
+                setFieldValue={setFieldValue}
+                path={image_path}
             />
-           <button type="submit">Submit</button>
+           <button type="submit">cập nhật sản phẩm</button>
+           </div>
+           <div className="col-sm-6">
+               <div className="row">
+                   <div className="col-sm-6">
+                   <FormikControl 
+                        control='imageUpdate' 
+                        label='' 
+                        name='file[1]'
+                        setFieldValue={setFieldValue}
+                        setCheckDeleteImage={setCheckDeleteImage}
+                        checkDeleteImage={checkDeleteImage}
+                        path={position[1]}
+                    />
+                    <FormikControl 
+                        control='imageUpdate' 
+                        label='' 
+                        name='file[2]'
+                        setFieldValue={setFieldValue}
+                        setCheckDeleteImage={setCheckDeleteImage}
+                        checkDeleteImage={checkDeleteImage}
+                    />
+                   </div>
+                   <div className="col-sm-6">
+                   <FormikControl 
+                        control='imageUpdate' 
+                        label='' 
+                        name='file[3]'
+                        setFieldValue={setFieldValue}
+                        setCheckDeleteImage={setCheckDeleteImage}
+                        checkDeleteImage={checkDeleteImage}
+                    />
+                    <FormikControl 
+                        control='imageUpdate' 
+                        label='' 
+                        name='file[4]'
+                        setFieldValue={setFieldValue}
+                        setCheckDeleteImage={setCheckDeleteImage}
+                        checkDeleteImage={checkDeleteImage}
+
+                    />
+                   </div>
+                </div>
+           </div>
+           </div>
          </Form>
-         
+       
        )}
      </Formik>
-   </div>
+  
               
 </div>
     )

@@ -6,7 +6,9 @@ import {selectedType,setTypes} from '../../redux/actions/typeActions';
 import {setSubTypes} from '../../redux/actions/subTypeActions';
 import { ServiceTypes } from "../../redux/contants/service-types";
 import { addImage} from '../../redux/actions/imageAction';
-import UpdateImage from "../UpdateImage";
+import { Formik, Form } from 'formik';
+ import * as Yup from 'yup';
+import FormikControl from "../formik/FormikControl";
 
 const AddProduct = () => {
     const url_api   = ServiceTypes.URL_API;
@@ -15,12 +17,20 @@ const AddProduct = () => {
     const imageId  = useSelector((state) => state.addImage.id);
 
     const [imageIdToWait, setImageIdToWait] = useState();
+    const [checkSubmit, setCheckSubmit] = useState(true);
 
-    const [file, setFile] = useState();
 
     const dispatch  = useDispatch();
-    const [typeId, setTypeId] = useState('null');
+    const [typeId, setTypeId] = useState('');
     const [newProduct, setNewProduct] = useState({
+		name: '',
+		price: '',
+		type_id: '',
+		sub_type_id: '',
+        note:'',
+        image_id:218,
+	})
+    const [initialValues,setInitialValues] = useState({
 		name: '',
 		price: '',
 		type_id: '',
@@ -28,26 +38,18 @@ const AddProduct = () => {
         note:'',
         image_id:'',
 	})
-    const { name, price,note} = newProduct;
-    const onChangeNewProductForm = event =>{
-        setNewProduct({ ...newProduct, [event.target.name]: event.target.value })
-    }
 
-    const checkType = (event) => {
+    const changeTypeId = (event) => {
+        if (event.target.name==="type_id"){
         setTypeId(event.target.value);
-        setNewProduct({ ...newProduct, [event.target.name]: event.target.value })
     }
-
-    
-    const uploadImage = async() => {
-        console.log("----------------------------------------------------------------");
-        console.log("UPLOAD IMAGES");
+    }
+    const uploadImage = async(file,values) => {
         const formData = new FormData();      
         formData.append(
             "file",
              file,
         );   
-        console.log("file = ",formData)
         const response = await axios
         .post(`${url_api}/image/upload`,
             formData
@@ -55,21 +57,25 @@ const AddProduct = () => {
         .catch((err) => {
             console.log("err ",err);
         })
-        console.log("imageCReate =  ",response.data.data);
         if (response){
-            dispatch(addImage(response.data.data));
-            console.log("response.data.data",response.data.data)
-            setNewProduct({...newProduct,['image_id']: response.data.data.id});
-            setImageIdToWait(imageId);       
+            dispatch(addImage(response.data));
+           ;
+         setValueNewroduct(values,response.data.id);
+         setImageIdToWait(imageId);       
         }
-        // setNewProduct({...newProduct,['image_id']: imageId});
       };
+      const setValueNewroduct = (values, id) => {
+        setNewProduct({...newProduct,
+                        name:values.name,
+                        type_id:values.type_id,
+                        sub_type_id:values.sub_type_id,
+                        price:values.price,
+                        note:values.note,
+                        image_id: id});
+      }
 
     const createProduct = async () => {
-       
-        console.log("CREATE PRODUCT");
-        console.log("craete new product", newProduct );
-
+      
         const response = await axios
         .post(`${url_api}/product/create`,
           newProduct
@@ -80,7 +86,7 @@ const AddProduct = () => {
         if (response){
             dispatch(addProduct(response.data.data));
         }
-       
+     
     }
     
   
@@ -103,7 +109,6 @@ const AddProduct = () => {
         })
         dispatch(selectedType(response?.data));
     }
-    
     const fetchSubTypes = async(typeId) => {
         const response = await axios
         .post(`${url_api}/sub-type/list`,{
@@ -130,101 +135,78 @@ const AddProduct = () => {
 
     
 
-  
-
-    const renderListType = types.map((type) => {
-        const {id,name}=type;
-        return (
-            <option value={id}>{name}</option>
-        )
-    });
-
-    const renderListSubType = subTypes.map((subType) => {
-        const {id,name}=subType;
-        return (
-            <option value={id}>{name}</option>
-        )
-    });
-
+    const ErrorForm = Yup.object().shape({
+        name: Yup.string()
+          .min(2, 'Too Short!')
+          .max(50, 'Too Long!')
+          .required('Required'),
+        type_id: Yup.number().required("Required"),
+        sub_type_id: Yup.number().required("Required"),
+        price: Yup.number().required("Required")
+            .min(0,'must >=0'),
+        file: Yup.mixed().required('A file is required'),
+      });
     return(
         <div>
-              <form>
-                <div className="mb-3">
-                    <label className="label">Tên sản phẩm</label>
-                    <input 
-                        required
-                        type="text" 
-                        name="name"
-                        value={name}
-                        className="form-control"  
-                        aria-describedby="emailHelp" 
-                        onChange={onChangeNewProductForm}
-                        />
-                </div>
-                <div className="mb-3">
-                    <label className="form-label">Loại sản phẩm</label>
-                    <select id="select" 
-                            value={typeId} 
-                            name="type_id"
-                            className="form-select" 
-                            onChange={checkType}
-                            >
-                        <option value='null' >Loại sản phẩm</option>
-                         {renderListType} 
-                    </select>
-                </div>
-                <div className="mb-3">
-                    <label className="form-label">Danh mục sản phẩm</label>
-                    <select 
-                        id="select"
-                        className="form-select"
-                        name="sub_type_id"
-                        onChange={onChangeNewProductForm}
-                        >
-                        <option value="null">Danh mục sản phẩm</option>
-                        {renderListSubType}
-                    </select>
-                </div>
-                <div className="mb-3">
-                    <label  className="form-label">Giá</label>
-                    <input type="number" 
-                           min={0} 
-                           value={price}
-                           onChange={onChangeNewProductForm}
-                           name="price"
-                           className="form-control" 
-                           aria-describedby="emailHelp" />
-                </div>
-                <div className="mb-3">
-                    <label className="form-label">Mô tả</label>
-                    <input type="text" 
-                            value={note}
-                           className="form-control" 
-                           aria-describedby="emailHelp"
-                           name="note"
-                           onChange={onChangeNewProductForm}
-                         />
-                </div>
-                
-            </form>
-            <div>
-            <div className="mb-3">
-                    <UpdateImage setFile={setFile}/>
-                </div>
-                <div className="mb-3">
-                <input 
-                    type="hidden"
-                    name="image_id"
-                    value={imageId}
-                    onChange={onChangeNewProductForm}
-                         />
-                </div>
-                <button className="btn btn-primary" onClick={()=>{uploadImage();
-                                                                 
-                                                                }}>
-                        Create</button>
-            </div>
-            </div>
+        <div>
+     
+     <Formik
+       initialValues={initialValues}
+       validationSchema={ErrorForm}
+       onSubmit={(values, {resetForm}) => {
+            uploadImage(values.file,values);
+            resetForm(initialValues);
+            setCheckSubmit(false);
+          }}
+       >
+       {({setFieldValue}) => (
+         <Form onChange={changeTypeId}
+         >
+           <FormikControl 
+                control='input' 
+                label='Name' 
+                name='name'
+                type="text"
+            />
+            <FormikControl 
+                control='select'  
+                label='Loại sản phẩm' 
+                name='type_id'
+                options={types}
+            />
+            <FormikControl 
+                control='select'  
+                label='Danh mục sản phẩm' 
+                name='sub_type_id'
+                options={subTypes}
+            />
+            <FormikControl 
+                control='input' 
+                label='Giá' 
+                name='price'
+                type="number"
+            />
+            <FormikControl 
+                control='textarea' 
+                label='Mô tả' 
+                name='note'
+            />
+            <FormikControl 
+                control='image' 
+                label='' 
+                name='file'
+                setFieldValue={setFieldValue}
+                checkSubmit={checkSubmit}
+                setCheckSubmit={setCheckSubmit}
+            />
+           <button type="submit">Thêm sản phẩm</button>
+         </Form>
+         
+       )}
+     </Formik>
+   </div>
+              
+</div>
     )
 }
 
